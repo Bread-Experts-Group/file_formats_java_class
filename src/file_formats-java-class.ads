@@ -349,7 +349,7 @@ package File_Formats.Java.Class is
    procedure Write_Class_File
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Item   : Class_File);
-   
+
    for Class_File'Input use Read_Class_File;
    for Class_File'Write use Write_Class_File;
 

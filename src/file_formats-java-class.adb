@@ -1,4 +1,7 @@
+--  testing
+pragma Ada_2022;
 with Ada.Text_IO;
+--  testing end
 
 package body File_Formats.Java.Class is
 
@@ -248,15 +251,22 @@ package body File_Formats.Java.Class is
    function Read_Class_File
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
    return Class_File is
-      Magic         : Class_File_Magic := Class_File_Magic'Input (Stream);
-      Minor_Version : u2.Big_Endian := u2.Big_Endian'Input (Stream);
-      Major_Version : u2.Big_Endian := u2.Big_Endian'Input (Stream);
+      Magic         : Class_File_Magic;
+      Minor_Version : u2.Big_Endian;
+      Major_Version : u2.Big_Endian;
+      Constant_Pool : Constant_Pool_Vectors.Vector;
    begin
       pragma Compile_Time_Warning
         (Standard.True, "Read_Class_File unfinished");
+      Class_File_Magic'Read (Stream, Magic);
+      u2.Big_Endian'Read (Stream, Minor_Version);
+      u2.Big_Endian'Read (Stream, Major_Version);
+      Read_Constant_Pool_Vector (Stream, Constant_Pool);
+
       Ada.Text_IO.Put_Line (Magic'Image);
-      Ada.Text_IO.Put_Line (Minor_Version'Image);
       Ada.Text_IO.Put_Line (Major_Version'Image);
+      Ada.Text_IO.Put_Line (Minor_Version'Image);
+      Ada.Text_IO.Put_Line (Constant_Pool'Image);
       return raise Program_Error
          with "Unimplemented procedure Read_Class_File";
    end Read_Class_File;
