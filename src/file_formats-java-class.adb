@@ -1,3 +1,5 @@
+with Ada.Text_IO;
+
 package body File_Formats.Java.Class is
 
    ------------------------------
@@ -243,14 +245,20 @@ package body File_Formats.Java.Class is
    -- Read_Class_File --
    ---------------------
 
-   procedure Read_Class_File
-     (Stream :     not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Class_File)
-   is
+   function Read_Class_File
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
+   return Class_File is
+      Magic         : Class_File_Magic := Class_File_Magic'Input (Stream);
+      Minor_Version : u2.Big_Endian := u2.Big_Endian'Input (Stream);
+      Major_Version : u2.Big_Endian := u2.Big_Endian'Input (Stream);
    begin
       pragma Compile_Time_Warning
-        (Standard.True, "Read_Class_File unimplemented");
-      raise Program_Error with "Unimplemented procedure Read_Class_File";
+        (Standard.True, "Read_Class_File unfinished");
+      Ada.Text_IO.Put_Line (Magic'Image);
+      Ada.Text_IO.Put_Line (Minor_Version'Image);
+      Ada.Text_IO.Put_Line (Major_Version'Image);
+      return raise Program_Error
+         with "Unimplemented procedure Read_Class_File";
    end Read_Class_File;
 
    ----------------------

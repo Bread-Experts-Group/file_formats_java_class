@@ -108,6 +108,8 @@ package File_Formats.Java.Class is
    type Utf_8_Constant_Pool_Entry_Access is
       not null access Utf_8_Constant_Pool_Entry;
    type Class_Constant_Pool_Entry_Access is
+      not null access Class_Constant_Pool_Entry;
+   type Class_Constant_Pool_Entry_Access_Optional is
       access Class_Constant_Pool_Entry;
 
    type Class_File_Access is
@@ -134,7 +136,7 @@ package File_Formats.Java.Class is
 
    package Interface_Vectors is new
       Ada.Containers.Vectors (Positive,
-                              Class_Constant_Pool_Entry_Access);
+                              Class_Constant_Pool_Entry_Access_Optional);
 
    type Class_File_Environment is
      (CLASS,
@@ -323,29 +325,32 @@ package File_Formats.Java.Class is
    -- Class File --
    ----------------
 
+   type Class_File_Magic is
+      new u4.Big_Endian range 16#CAFEBABE# .. 16#CAFEBABE#;
+
    type Class_File is record
-      Magic         : u4.Big_Endian range 16#CAFEBABE# .. 16#CAFEBABE#;
+      Magic         : Class_File_Magic;
       Minor_Version : u2.Big_Endian;
       Major_Version : u2.Big_Endian;
       Constant_Pool : Constant_Pool_Vectors.Vector;
       Access_Flags  : Class_File_Access_Flags;
       This_Class    : Class_Constant_Pool_Entry_Access;
-      Super_Class   : Class_Constant_Pool_Entry_Access;
+      Super_Class   : Class_Constant_Pool_Entry_Access_Optional;
       Interfaces    : Interface_Vectors.Vector;
       Fields        : Field_Vectors.Vector;
       Methods       : Method_Vectors.Vector;
       Attributes    : Attribute_Vectors.Vector;
    end record;
 
-   procedure Read_Class_File
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Class_File);
+   function Read_Class_File
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
+   return Class_File;
 
    procedure Write_Class_File
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Item   : Class_File);
    
-   for Class_File'Read use Read_Class_File;
+   for Class_File'Input use Read_Class_File;
    for Class_File'Write use Write_Class_File;
 
 end File_Formats.Java.Class;
