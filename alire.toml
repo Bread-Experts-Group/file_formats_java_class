@@ -8,3 +8,15 @@ maintainers-logins = ["ATPStorages"]
 licenses = "Apache-2.0 WITH LLVM-exception"
 website = "https://javart.zip/p/file-formats/java/class"
 tags = ["file", "formats", "java", "class"]
+
+[[depends-on]]
+file_formats_java = "~0.1.0-dev"
+
+[[pins]]
+file_formats_java = { url='https://github.com/Bread-Experts-Group/file_formats_java.git' }
+
+[[depends-on]]
+byteflippers = "^1.0.0"
+
+[[pins]]
+byteflippers = { url='https://github.com/Bread-Experts-Group/byteflippers.git' }

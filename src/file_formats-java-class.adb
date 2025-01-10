@@ -1,0 +1,270 @@
+package body File_Formats.Java.Class is
+
+   ------------------------------
+   -- Read_Constant_Pool_Entry --
+   ------------------------------
+
+   function Read_Constant_Pool_Entry
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
+      return Constant_Pool_Entry
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Constant_Pool_Entry unimplemented");
+      return
+        raise Program_Error
+          with "Unimplemented function Read_Constant_Pool_Entry";
+   end Read_Constant_Pool_Entry;
+
+   -------------------------------
+   -- Write_Constant_Pool_Entry --
+   -------------------------------
+
+   procedure Write_Constant_Pool_Entry
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Constant_Pool_Entry)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Constant_Pool_Entry unimplemented");
+      raise Program_Error
+        with "Unimplemented procedure Write_Constant_Pool_Entry";
+   end Write_Constant_Pool_Entry;
+
+   -------------------------------
+   -- Read_Constant_Pool_Vector --
+   -------------------------------
+
+   procedure Read_Constant_Pool_Vector
+     (Stream :     not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : out Constant_Pool_Vectors.Vector)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Constant_Pool_Vector unimplemented");
+      raise Program_Error
+        with "Unimplemented procedure Read_Constant_Pool_Vector";
+   end Read_Constant_Pool_Vector;
+
+   --------------------------------
+   -- Write_Constant_Pool_Vector --
+   --------------------------------
+
+   procedure Write_Constant_Pool_Vector
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Constant_Pool_Vectors.Vector)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Constant_Pool_Vector unimplemented");
+      raise Program_Error
+        with "Unimplemented procedure Write_Constant_Pool_Vector";
+   end Write_Constant_Pool_Vector;
+
+   -------------------------------
+   -- Read_Class_File_Attribute --
+   -------------------------------
+
+   function Read_Class_File_Attribute
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
+      return Class_File_Attribute
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Class_File_Attribute unimplemented");
+      return
+        raise Program_Error
+          with "Unimplemented function Read_Class_File_Attribute";
+   end Read_Class_File_Attribute;
+
+   --------------------------------
+   -- Write_Class_File_Attribute --
+   --------------------------------
+
+   procedure Write_Class_File_Attribute
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Class_File_Attribute)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Class_File_Attribute unimplemented");
+      raise Program_Error
+        with "Unimplemented procedure Write_Class_File_Attribute";
+   end Write_Class_File_Attribute;
+
+   ---------------------------
+   -- Read_Attribute_Vector --
+   ---------------------------
+
+   procedure Read_Attribute_Vector
+     (Stream :     not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : out Attribute_Vectors.Vector)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Attribute_Vector unimplemented");
+      raise Program_Error with "Unimplemented procedure Read_Attribute_Vector";
+   end Read_Attribute_Vector;
+
+   ----------------------------
+   -- Write_Attribute_Vector --
+   ----------------------------
+
+   procedure Write_Attribute_Vector
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Attribute_Vectors.Vector)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Attribute_Vector unimplemented");
+      raise Program_Error
+        with "Unimplemented procedure Write_Attribute_Vector";
+   end Write_Attribute_Vector;
+
+   ---------------------------
+   -- Read_Class_File_Field --
+   ---------------------------
+
+   function Read_Class_File_Field
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
+      return Class_File_Field
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Class_File_Field unimplemented");
+      return
+        raise Program_Error
+          with "Unimplemented function Read_Class_File_Field";
+   end Read_Class_File_Field;
+
+   ----------------------------
+   -- Write_Class_File_Field --
+   ----------------------------
+
+   procedure Write_Class_File_Field
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Class_File_Field)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Class_File_Field unimplemented");
+      raise Program_Error
+        with "Unimplemented procedure Write_Class_File_Field";
+   end Write_Class_File_Field;
+
+   -----------------------
+   -- Read_Field_Vector --
+   -----------------------
+
+   procedure Read_Field_Vector
+     (Stream :     not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : out Field_Vectors.Vector)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Field_Vector unimplemented");
+      raise Program_Error with "Unimplemented procedure Read_Field_Vector";
+   end Read_Field_Vector;
+
+   ------------------------
+   -- Write_Field_Vector --
+   ------------------------
+
+   procedure Write_Field_Vector
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Field_Vectors.Vector)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Field_Vector unimplemented");
+      raise Program_Error with "Unimplemented procedure Write_Field_Vector";
+   end Write_Field_Vector;
+
+   ----------------------------
+   -- Read_Class_File_Method --
+   ----------------------------
+
+   function Read_Class_File_Method
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
+      return Class_File_Method
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Class_File_Method unimplemented");
+      return
+        raise Program_Error
+          with "Unimplemented function Read_Class_File_Method";
+   end Read_Class_File_Method;
+
+   -----------------------------
+   -- Write_Class_File_Method --
+   -----------------------------
+
+   procedure Write_Class_File_Method
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Class_File_Method)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Class_File_Method unimplemented");
+      raise Program_Error
+        with "Unimplemented procedure Write_Class_File_Method";
+   end Write_Class_File_Method;
+
+   ------------------------
+   -- Read_Method_Vector --
+   ------------------------
+
+   procedure Read_Method_Vector
+     (Stream :     not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : out Method_Vectors.Vector)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Method_Vector unimplemented");
+      raise Program_Error with "Unimplemented procedure Read_Method_Vector";
+   end Read_Method_Vector;
+
+   -------------------------
+   -- Write_Method_Vector --
+   -------------------------
+
+   procedure Write_Method_Vector
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Method_Vectors.Vector)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Method_Vector unimplemented");
+      raise Program_Error with "Unimplemented procedure Write_Method_Vector";
+   end Write_Method_Vector;
+
+   ---------------------
+   -- Read_Class_File --
+   ---------------------
+
+   procedure Read_Class_File
+     (Stream :     not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : out Class_File)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Read_Class_File unimplemented");
+      raise Program_Error with "Unimplemented procedure Read_Class_File";
+   end Read_Class_File;
+
+   ----------------------
+   -- Write_Class_File --
+   ----------------------
+
+   procedure Write_Class_File
+     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item   : Class_File)
+   is
+   begin
+      pragma Compile_Time_Warning
+        (Standard.True, "Write_Class_File unimplemented");
+      raise Program_Error with "Unimplemented procedure Write_Class_File";
+   end Write_Class_File;
+
+end File_Formats.Java.Class;
