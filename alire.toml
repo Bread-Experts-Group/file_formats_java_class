@@ -1,0 +1,10 @@
+name = "file_formats_java_class"
+description = "File format reader/writer for the Java class file format"
+version = "0.1.0-dev"
+
+authors = ["Miko Elbrecht"]
+maintainers = ["Miko Elbrecht <pmt.mailservice@gmail.com>"]
+maintainers-logins = ["ATPStorages"]
+licenses = "Apache-2.0 WITH LLVM-exception"
+website = "https://javart.zip/p/file-formats/java/class"
+tags = ["file", "formats", "java", "class"]
