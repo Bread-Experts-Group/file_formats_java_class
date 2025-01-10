@@ -329,14 +329,14 @@ package File_Formats.Java.Class is
       Magic         : u4.Big_Endian range 16#CAFEBABE# .. 16#CAFEBABE#;
       Minor_Version : u2.Big_Endian;
       Major_Version : u2.Big_Endian;
-      --  Constant_Pool : Constant_Pool_Vectors.Vector;
-      --  Access_Flags  : Class_File_Access_Flags;
-      --  This_Class    : Class_Constant_Pool_Entry_Access;
-      --  Super_Class   : Class_Constant_Pool_Entry_Access_Optional;
-      --  Interfaces    : Interface_Vectors.Vector;
-      --  Fields        : Field_Vectors.Vector;
-      --  Methods       : Method_Vectors.Vector;
-      --  Attributes    : Attribute_Vectors.Vector;
+      Constant_Pool : Constant_Pool_Vectors.Vector;
+      Access_Flags  : Class_File_Access_Flags;
+      This_Class    : Class_Constant_Pool_Entry_Access;
+      Super_Class   : Class_Constant_Pool_Entry_Access_Optional;
+      Interfaces    : Interface_Vectors.Vector;
+      Fields        : Field_Vectors.Vector;
+      Methods       : Method_Vectors.Vector;
+      Attributes    : Attribute_Vectors.Vector;
    end record;
 
    procedure Read_Class_File
