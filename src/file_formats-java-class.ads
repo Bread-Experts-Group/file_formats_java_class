@@ -108,8 +108,6 @@ package File_Formats.Java.Class is
    type Utf_8_Constant_Pool_Entry_Access is
       not null access Utf_8_Constant_Pool_Entry;
    type Class_Constant_Pool_Entry_Access is
-      not null access Class_Constant_Pool_Entry;
-   type Class_Constant_Pool_Entry_Access_Optional is
       access Class_Constant_Pool_Entry;
 
    type Class_File_Access is
@@ -136,7 +134,7 @@ package File_Formats.Java.Class is
 
    package Interface_Vectors is new
       Ada.Containers.Vectors (Positive,
-                              Class_Constant_Pool_Entry_Access_Optional);
+                              Class_Constant_Pool_Entry_Access);
 
    type Class_File_Environment is
      (CLASS,
@@ -331,8 +329,8 @@ package File_Formats.Java.Class is
       Major_Version : u2.Big_Endian;
       Constant_Pool : Constant_Pool_Vectors.Vector;
       Access_Flags  : Class_File_Access_Flags;
-      --  This_Class    : Class_Constant_Pool_Entry_Access;
-      Super_Class   : Class_Constant_Pool_Entry_Access_Optional;
+      This_Class    : Class_Constant_Pool_Entry_Access;
+      Super_Class   : Class_Constant_Pool_Entry_Access;
       Interfaces    : Interface_Vectors.Vector;
       Fields        : Field_Vectors.Vector;
       Methods       : Method_Vectors.Vector;
