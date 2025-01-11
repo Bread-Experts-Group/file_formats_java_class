@@ -1,7 +1,5 @@
 with Ada.Unchecked_Conversion;
 
-with Ada.Text_IO;
-
 -----------------------
 -- Read_Field_Vector --
 -----------------------
@@ -34,6 +32,5 @@ begin
                Item.Append (Field);
          end case;
       end;
-      Ada.Text_IO.Put_Line (Item'Image);
    end loop;
 end Read_Field_Vector;
