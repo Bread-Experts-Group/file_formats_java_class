@@ -172,8 +172,6 @@ package body File_Formats.Java.Class is
       Ada.Text_IO.Put_Line ("Fields       :" & Fields'Image);
       Ada.Text_IO.Put_Line ("Methods      :" & Methods'Image);
       Ada.Text_IO.Put_Line ("Attributes   :" & Attributes'Image);
-      return
-        raise Program_Error with "Unimplemented procedure Read_Class_File";
    end Read_Class_File;
 
    ----------------------
