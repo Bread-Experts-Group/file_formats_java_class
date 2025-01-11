@@ -85,11 +85,13 @@ package body File_Formats.Java.Class is
       function u8_To_Double is new
         Ada.Unchecked_Conversion (u8.Big_Endian, Standard.Long_Float);
 
+      procedure Handle_Incomplete_Entry (Index : Constant_Pool_Index) is
+      begin
+         Ada.Text_IO.Put_Line ("Handle entry at" & Index'Image);
+      end Handle_Incomplete_Entry;
+
       use type i2.Big_Endian;
    begin
-      pragma
-        Compile_Time_Warning
-          (Standard.True, "Read_Constant_Pool_Map unfinished");
       i2.Big_Endian'Read (Stream, Constant_Pool_Count);
       Constant_Pool_Position := 1;
       loop
@@ -312,8 +314,14 @@ package body File_Formats.Java.Class is
          Constant_Pool_Position := @ + 1;
          exit when Constant_Pool_Position = Constant_Pool_Count;
       end loop;
+      Constant_Pool_Position := 1;
+      Constant_Pool_Count := Constant_Pool_Index (Incomplete_Map.Length);
+      loop
+         Handle_Incomplete_Entry (Constant_Pool_Position);
+         Constant_Pool_Position := @ + 1;
+         exit when Constant_Pool_Position = Constant_Pool_Count;
+      end loop;
       Ada.Text_IO.Put_Line ("Constant Pool: " & Item'Image);
-      Ada.Text_IO.Put_Line ("Incomplete Pool: " & Incomplete_Map'Image);
       raise Program_Error
         with "Unimplemented procedure Read_Constant_Pool_Map";
    end Read_Constant_Pool_Map;
