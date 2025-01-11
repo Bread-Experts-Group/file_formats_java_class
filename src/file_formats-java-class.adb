@@ -2,7 +2,7 @@ pragma Ada_2022;
 
 with Ada.Unchecked_Conversion;
 
-with Ada.Text_IO.Put_Line;
+with Ada.Text_IO;
 
 package body File_Formats.Java.Class is
 
