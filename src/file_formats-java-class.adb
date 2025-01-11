@@ -269,8 +269,7 @@ package body File_Formats.Java.Class is
       Ada.Text_IO.Put_Line (Major_Version'Image);
       Ada.Text_IO.Put_Line (Minor_Version'Image);
       Ada.Text_IO.Put_Line (Constant_Pool'Image);
-      Ada.Text_IO.Put_Line (Access_Flags (PUBLIC)'Image);
-      Ada.Text_IO.Put_Line (Access_Flags (FINAL)'Image);
+      Ada.Text_IO.Put_Line (Access_Flags'Image);
       return
         raise Program_Error with "Unimplemented procedure Read_Class_File";
    end Read_Class_File;

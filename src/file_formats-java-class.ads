@@ -129,23 +129,23 @@ package File_Formats.Java.Class is
    type Class_Constant_Pool_Entry_Access_Optional is
      access Class_Constant_Pool_Entry;
 
-   type Class_File_Access is (PUBLIC, FINAL, SUPER, IS_INTERFACE, IS_ABSTRACT)
-   with Size => 16;
+   type Class_File_Access_Flags is record
+      PUBLIC       : Boolean;
+      FINAL        : Boolean;
+      SUPER        : Boolean;
+      IS_INTERFACE : Boolean;
+      IS_ABSTRACT  : Boolean;
+   end record with Size => 16, Pack, Predicate =>
+       not (Class_File_Access_Flags.IS_INTERFACE
+            and then Class_File_Access_Flags.FINAL);
 
-   for Class_File_Access use
-     (PUBLIC       => 2 ** 0,
-      FINAL        => 2 ** 4,
-      SUPER        => 2 ** 5,
-      IS_INTERFACE => 2 ** 9,
-      IS_ABSTRACT  => 2 ** 10);
-
-   type Class_File_Access_Flags is
-     array (Class_File_Access'First .. Class_File_Access'Last) of Boolean
-   with
-     Component_Size => 1,
-     Predicate =>
-       not (Class_File_Access_Flags (IS_INTERFACE)
-            and then Class_File_Access_Flags (FINAL));
+   for Class_File_Access_Flags use record
+      PUBLIC       at 0 range 0 .. 0;
+      FINAL        at 0 range 4 .. 4;
+      SUPER        at 0 range 5 .. 5;
+      IS_INTERFACE at 1 range 1 .. 1;
+      IS_ABSTRACT  at 1 range 2 .. 2;
+   end record;
 
    package Interface_Vectors is new
      Ada.Containers.Vectors
