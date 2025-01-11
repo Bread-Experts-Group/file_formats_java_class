@@ -141,7 +141,7 @@ package File_Formats.Java.Class is
        (Positive,
         Class_Constant_Pool_Entry_Access_Optional);
 
-   type Class_File_Environment is (CLASS, INSTANCE, IS_INTERFACE);
+   type Class_File_Environment is (CLASS, IS_INTERFACE);
 
    ---------------------------
    -- Class File Attributes --
@@ -205,13 +205,13 @@ package File_Formats.Java.Class is
             or else Class_File_Field_Access_Flags_Any.TRANSIENT);
 
    type Class_File_Field (Environment : Class_File_Environment) is record
-      Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry_Access;
+      Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry;
       Attributes               : Attribute_Vectors.Vector;
       case Environment is
          when CLASS =>
             Access_Flags_Class : Class_File_Field_Access_Flags;
 
-         when others =>
+         when IS_INTERFACE =>
             Access_Flags_Others : Class_File_Field_Access_Flags_Any;
       end case;
    end record;
@@ -220,8 +220,10 @@ package File_Formats.Java.Class is
      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Field);
 
    procedure Read_Field_Vector
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Field_Vectors.Vector);
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item        : out Field_Vectors.Vector;
+      Pool        : Constant_Pool_Maps.Map;
+      Environment : Class_File_Environment);
 
    procedure Write_Field_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -265,13 +267,13 @@ package File_Formats.Java.Class is
             or else Class_File_Method_Access_Flags_Any.NATIVE);
 
    type Class_File_Method (Environment : Class_File_Environment) is record
-      Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry_Access;
+      Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry;
       Attributes               : Attribute_Vectors.Vector;
       case Environment is
-         when CLASS | INSTANCE =>
+         when CLASS =>
             Access_Flags_Class : Class_File_Method_Access_Flags;
 
-         when others =>
+         when IS_INTERFACE =>
             Access_Flags_Others : Class_File_Method_Access_Flags_Any;
       end case;
    end record;

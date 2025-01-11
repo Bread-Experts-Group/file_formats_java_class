@@ -66,14 +66,10 @@ package body File_Formats.Java.Class is
    -----------------------
 
    procedure Read_Field_Vector
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Field_Vectors.Vector) is
-   begin
-      pragma
-        Compile_Time_Warning
-          (Standard.True, "Read_Field_Vector unimplemented");
-      raise Program_Error with "Unimplemented procedure Read_Field_Vector";
-   end Read_Field_Vector;
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item        : out Field_Vectors.Vector;
+      Pool        : Constant_Pool_Maps.Map;
+      Environment : Class_File_Environment) is separate;
 
    ------------------------
    -- Write_Field_Vector --
@@ -154,7 +150,7 @@ package body File_Formats.Java.Class is
           Interfaces.Append (new Class_Constant_Pool_Entry'(Class_Constant_Pool_Entry (Constant_Pool.Element (Index))));
         end loop;
       end;
-      Read_Field_Vector (Stream, Fields);
+      Read_Field_Vector (Stream, Fields, Constant_Pool, (if Access_Flags.IS_INTERFACE then IS_INTERFACE else CLASS));
 
       Ada.Text_IO.Put_Line ("Magic        :" & Magic'Image);
       Ada.Text_IO.Put_Line ("Major V#     :" & Major_Version'Image);

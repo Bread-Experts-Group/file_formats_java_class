@@ -1,10 +1,6 @@
 pragma Ada_2022;
 pragma Extensions_Allowed (On);
 
---  testing
-with Ada.Text_IO;
---  testing end
-
 with Ada.Unchecked_Conversion;
 
 ----------------------------
