@@ -2,10 +2,6 @@ pragma Ada_2022;
 
 with Ada.Unchecked_Conversion;
 
---  testing
-with Ada.Text_IO;
---  testing end
-
 package body File_Formats.Java.Class is
 
    ----------------------------
@@ -167,10 +163,10 @@ package body File_Formats.Java.Class is
          Major_Version,
          Constant_Pool,
          Access_Flags,
+
            new Class_Constant_Pool_Entry'
              (Class_Constant_Pool_Entry
                 (Constant_Pool.Element (This_Class_Idx))),
-
            (if Constant_Pool.Contains (Super_Class_Idx)
             then
               new Class_Constant_Pool_Entry'
