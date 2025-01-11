@@ -5,14 +5,14 @@
 separate (File_Formats.Java.Class)
 procedure Read_Attribute_Vector
   (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-   Item   : out Attribute_Vectors.Vector;
+   Item   : out Attribute_Vectors.Vector'Class;
    Pool   : Constant_Pool_Maps.Map)
 is
    Attribute_Type : Class_File_Attribute_Type;
 begin
    for Index in 1 .. u2.Big_Endian'Input (Stream) loop
       declare
-         Name : constant Utf_8_Constant_Pool_Entry :=
+         Name   : constant Utf_8_Constant_Pool_Entry :=
            Utf_8_Constant_Pool_Entry
              (Pool.Element (Constant_Pool_Index'Input (Stream)));
          Length : constant u4.Big_Endian := u4.Big_Endian'Input (Stream);
@@ -34,6 +34,57 @@ begin
                        Utf_8_Constant_Pool_Entry
                          (Pool.Element (Constant_Pool_Index'Input (Stream)))));
 
+            when Code =>
+               declare
+                  Max_Stack_Size       : constant u2.Big_Endian :=
+                    u2.Big_Endian'Input (Stream);
+                  Local_Variable_Count : constant u2.Big_Endian :=
+                    u2.Big_Endian'Input (Stream);
+                  Code_Length          : constant u4.Big_Endian :=
+                    u4.Big_Endian'Input (Stream);
+                  Code_Data            : Raw_Data (1 .. Code_Length);
+                  Exception_Table      : CFA_Code_Exception_Vectors.Vector;
+                  Attributes           : Attribute_Vector;
+               begin
+                  Raw_Data'Read (Stream, Code_Data);
+                  for Index in 1 .. u2.Big_Endian'Input (Stream) loop
+                     declare
+                        Start, Stop, Handle : u2.Big_Endian;
+                        Class_Idx           : u2.Big_Endian;
+                     begin
+                        u2.Big_Endian'Read (Stream, Start);
+                        u2.Big_Endian'Read (Stream, Stop);
+                        u2.Big_Endian'Read (Stream, Handle);
+                        u2.Big_Endian'Read (Stream, Class_Idx);
+                        Exception_Table.Append
+                          (CFA_Code_Exception_Entry'
+                             (Start,
+                              Stop,
+                              Handle,
+
+
+                                (if Class_Idx = 0 then null
+                                 else
+                                   new Class_Constant_Pool_Entry'
+                                     (Class_Constant_Pool_Entry
+                                        (Pool.Element
+                                           (Constant_Pool_Index
+                                              (Class_Idx)))))));
+                     end;
+                  end loop;
+                  Read_Attribute_Vector (Stream, Attributes, Pool);
+                  Item.Append
+                    (Class_File_Attribute'
+                       (Attribute_Type       => Code,
+                        Name_Ref             => Name,
+                        Max_Stack_Size       => Max_Stack_Size,
+                        Local_Variable_Count => Local_Variable_Count,
+                        Code                 => new Raw_Data'(Code_Data),
+                        Exception_Table      => Exception_Table,
+                        Attributes           =>
+                          new Attribute_Vector'(Attributes)));
+               end;
+
             when Other =>
                declare
                   Data : Raw_Data (1 .. Length);
@@ -45,7 +96,7 @@ begin
                         Name_Ref       => Name,
                         Data           => new Raw_Data'(Data)));
                end;
-            
+
             when others =>
                raise Constraint_Error with Attribute_Type'Image;
          end case;

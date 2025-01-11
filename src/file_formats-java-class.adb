@@ -34,7 +34,7 @@ package body File_Formats.Java.Class is
 
    procedure Read_Attribute_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Attribute_Vectors.Vector;
+      Item   : out Attribute_Vectors.Vector'Class;
       Pool   : Constant_Pool_Maps.Map)
    is separate;
 
@@ -161,9 +161,13 @@ package body File_Formats.Java.Class is
          Major_Version,
          Constant_Pool,
          Access_Flags,
+
+
            new Class_Constant_Pool_Entry'
              (Class_Constant_Pool_Entry
                 (Constant_Pool.Element (This_Class_Idx))),
+
+
            (if Constant_Pool.Contains (Super_Class_Idx)
             then
               new Class_Constant_Pool_Entry'

@@ -165,12 +165,31 @@ package File_Formats.Java.Class is
    type Raw_Data is array (u4.Big_Endian range <>) of Byteflippers.Unsigned_8;
    type Raw_Data_Access is not null access Raw_Data;
 
+   type CFA_Code_Exception_Entry is record
+      Program_Counter_Start   : u2.Big_Endian;
+      Program_Counter_Stop    : u2.Big_Endian;
+      Program_Counter_Handler : u2.Big_Endian;
+      Catch                   : Class_Constant_Pool_Entry_Access_Optional;
+   end record;
+
+   package CFA_Code_Exception_Vectors is new
+     Ada.Containers.Vectors (Positive, CFA_Code_Exception_Entry);
+   type Attribute_Vector;
+   type Attribute_Vector_Access is not null access Attribute_Vector;
+
    type Class_File_Attribute (Attribute_Type : Class_File_Attribute_Type) is
    record
       Name_Ref : Utf_8_Constant_Pool_Entry;
       case Attribute_Type is
          when SourceFile =>
             Source_File : Utf_8_Constant_Pool_Entry;
+
+         when Code =>
+            Max_Stack_Size       : u2.Big_Endian;
+            Local_Variable_Count : u2.Big_Endian;
+            Code                 : Raw_Data_Access;
+            Exception_Table      : CFA_Code_Exception_Vectors.Vector;
+            Attributes           : Attribute_Vector_Access;
 
          when others =>
             Data : Raw_Data_Access;
@@ -179,10 +198,11 @@ package File_Formats.Java.Class is
 
    package Attribute_Vectors is new
      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Attribute);
+   type Attribute_Vector is new Attribute_Vectors.Vector with null record;
 
    procedure Read_Attribute_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Attribute_Vectors.Vector;
+      Item   : out Attribute_Vectors.Vector'Class;
       Pool   : Constant_Pool_Maps.Map);
 
    procedure Write_Attribute_Vector
