@@ -1,4 +1,7 @@
 pragma Ada_2022;
+
+with Ada.Unchecked_Conversion;
+
 --  testing
 with Ada.Text_IO;
 --  testing end
@@ -65,6 +68,11 @@ package body File_Formats.Java.Class is
         end case;
       end record;
 
+      function u4_To_Float is new Ada.Unchecked_Conversion
+        (u4.Big_Endian, Standard.Float);
+      function u8_To_Double is new Ada.Unchecked_Conversion
+        (u8.Big_Endian, Standard.Long_Float);
+
       use type i2.Big_Endian;
    begin
       pragma Compile_Time_Warning
@@ -75,10 +83,38 @@ package body File_Formats.Java.Class is
       loop
         Constant_Pool_Entry_Tag'Read (Stream, Read_Tag);
         case Read_Tag is
-          when FlOAT =>
+          when UTF_8 => declare
+              Length : constant u2.Big_Endian := u2.Big_Endian'Input (Stream);
+              Bytes  : Standard.String (1 .. Standard.Integer (Length));
+            begin
+              Standard.String'Read (Stream, Bytes);
+              Item.Replace_Element
+                (Constant_Pool_Position,
+                 Constant_Pool_Entry'
+                  (UTF_8, new Standard.String'(Bytes)));
+            end;
+          when INTEGER =>
             Item.Replace_Element
               (Constant_Pool_Position,
-               Constant_Pool_Entry'(FLOAT, Standard.Float'Input (Stream)));
+               Constant_Pool_Entry'
+                (INTEGER, Standard.Integer (i4.Big_Endian'Input (Stream))));
+          when FLOAT =>
+            Item.Replace_Element
+              (Constant_Pool_Position,
+               Constant_Pool_Entry'
+                (FLOAT, u4_To_Float (u4.Big_Endian'Input (Stream))));
+          when LONG =>
+            Item.Replace_Element
+              (Constant_Pool_Position,
+               Constant_Pool_Entry'
+                (LONG,
+                 Standard.Long_Integer (i8.Big_Endian'Input (Stream))));
+          when DOUBLE =>
+            Item.Replace_Element
+              (Constant_Pool_Position,
+               Constant_Pool_Entry'
+                (DOUBLE,
+                 u8_To_Double (u8.Big_Endian'Input (Stream))));
           when others =>
             raise Program_Error with "Unimplemented tag " & Read_Tag'Image;
         end case;

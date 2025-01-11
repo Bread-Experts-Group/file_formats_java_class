@@ -5,8 +5,12 @@ with Byteflippers;
 
 package File_Formats.Java.Class is
 
+   package u8 renames Byteflippers.Endians_Unsigned_64;
    package u4 renames Byteflippers.Endians_Unsigned_32;
    package u2 renames Byteflippers.Endians_Unsigned_16;
+
+   package i8 renames Byteflippers.Endians_Signed_64;
+   package i4 renames Byteflippers.Endians_Signed_32;
    package i2 renames Byteflippers.Endians_Signed_16;
 
    ------------------------------
