@@ -198,31 +198,33 @@ package File_Formats.Java.Class is
    -- Class File Fields --
    -----------------------
 
-   type Class_File_Field_Access is
-     (PUBLIC, IS_PRIVATE, IS_PROTECTED, STATIC, FINAL, VOLATILE, TRANSIENT)
-   with Size => 16;
+   type Class_File_Field_Access_Flags is record
+      PUBLIC       : Boolean;
+      IS_PRIVATE   : Boolean;
+      IS_PROTECTED : Boolean;
+      STATIC       : Boolean;
+      FINAL        : Boolean;
+      VOLATILE     : Boolean;
+      TRANSIENT    : Boolean;
+   end record with Size => 16, Pack;
 
-   for Class_File_Field_Access use
-     (PUBLIC       => 2 ** 0,
-      IS_PRIVATE   => 2 ** 1,
-      IS_PROTECTED => 2 ** 2,
-      STATIC       => 2 ** 3,
-      FINAL        => 2 ** 4,
-      VOLATILE     => 2 ** 6,
-      TRANSIENT    => 2 ** 7);
-
-   type Class_File_Field_Access_Flags is
-     array (Class_File_Field_Access'First .. Class_File_Field_Access'Last)
-     of Boolean
-   with Component_Size => 1;
+   for Class_File_Field_Access_Flags use record
+      PUBLIC       at 0 range 0 .. 0;
+      IS_PRIVATE   at 0 range 1 .. 1;
+      IS_PROTECTED at 0 range 2 .. 2;
+      STATIC       at 0 range 3 .. 3;
+      FINAL        at 0 range 4 .. 4;
+      VOLATILE     at 0 range 6 .. 6;
+      TRANSIENT    at 0 range 7 .. 7;
+   end record;
 
    type Class_File_Field_Access_Flags_Any is new Class_File_Field_Access_Flags
    with
      Predicate =>
-       not (Class_File_Field_Access_Flags_Any (IS_PRIVATE)
-            or else Class_File_Field_Access_Flags_Any (IS_PROTECTED)
-            or else Class_File_Field_Access_Flags_Any (VOLATILE)
-            or else Class_File_Field_Access_Flags_Any (TRANSIENT));
+       not (Class_File_Field_Access_Flags_Any.IS_PRIVATE
+            or else Class_File_Field_Access_Flags_Any.IS_PROTECTED
+            or else Class_File_Field_Access_Flags_Any.VOLATILE
+            or else Class_File_Field_Access_Flags_Any.TRANSIENT);
 
    type Class_File_Field (Environment : Class_File_Environment) is record
       Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry_Access;
@@ -262,42 +264,38 @@ package File_Formats.Java.Class is
    -- Class File Methods --
    ------------------------
 
-   type Class_File_Method_Access is
-     (PUBLIC,
-      IS_PRIVATE,
-      IS_PROTECTED,
-      STATIC,
-      FINAL,
-      IS_SYNCHRONIZED,
-      NATIVE,
-      IS_ABSTRACT)
-   with Size => 16;
+   type Class_File_Method_Access_Flags is record
+      PUBLIC          : Boolean;
+      IS_PRIVATE      : Boolean;
+      IS_PROTECTED    : Boolean;
+      STATIC          : Boolean;
+      FINAL           : Boolean;
+      IS_SYNCHRONIZED : Boolean;
+      NATIVE          : Boolean;
+      IS_ABSTRACT     : Boolean;
+   end record with Size => 16, Pack;
 
-   for Class_File_Method_Access use
-     (PUBLIC          => 2 ** 0,
-      IS_PRIVATE      => 2 ** 1,
-      IS_PROTECTED    => 2 ** 2,
-      STATIC          => 2 ** 3,
-      FINAL           => 2 ** 4,
-      IS_SYNCHRONIZED => 2 ** 5,
-      NATIVE          => 2 ** 9,
-      IS_ABSTRACT     => 2 ** 11);
-
-   type Class_File_Method_Access_Flags is
-     array (Class_File_Method_Access'First .. Class_File_Method_Access'Last)
-     of Boolean
-   with Component_Size => 1;
+   for Class_File_Method_Access_Flags use record
+      PUBLIC          at 0 range 0 .. 0;
+      IS_PRIVATE      at 0 range 1 .. 1;
+      IS_PROTECTED    at 0 range 2 .. 2;
+      STATIC          at 0 range 3 .. 3;
+      FINAL           at 0 range 4 .. 4;
+      IS_SYNCHRONIZED at 0 range 5 .. 5;
+      NATIVE          at 1 range 1 .. 1;
+      IS_ABSTRACT     at 1 range 3 .. 3;
+   end record;
 
    type Class_File_Method_Access_Flags_Any is
      new Class_File_Method_Access_Flags
    with
      Predicate =>
-       not (Class_File_Method_Access_Flags_Any (IS_PRIVATE)
-            or else Class_File_Method_Access_Flags_Any (IS_PROTECTED)
-            or else Class_File_Method_Access_Flags_Any (STATIC)
-            or else Class_File_Method_Access_Flags_Any (FINAL)
-            or else Class_File_Method_Access_Flags_Any (IS_SYNCHRONIZED)
-            or else Class_File_Method_Access_Flags_Any (NATIVE));
+       not (Class_File_Method_Access_Flags_Any.IS_PRIVATE
+            or else Class_File_Method_Access_Flags_Any.IS_PROTECTED
+            or else Class_File_Method_Access_Flags_Any.STATIC
+            or else Class_File_Method_Access_Flags_Any.FINAL
+            or else Class_File_Method_Access_Flags_Any.IS_SYNCHRONIZED
+            or else Class_File_Method_Access_Flags_Any.NATIVE);
 
    type Class_File_Method (Environment : Class_File_Environment) is record
       Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry_Access;
