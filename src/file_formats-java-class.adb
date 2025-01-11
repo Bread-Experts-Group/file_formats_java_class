@@ -258,7 +258,7 @@ package body File_Formats.Java.Class is
       u2.Big_Endian'Read (Stream, Minor_Version);
       u2.Big_Endian'Read (Stream, Major_Version);
       Read_Constant_Pool_Map (Stream, Constant_Pool);
-      Ada.Text_IO.Put_Line (Constant_Pool);
+      Ada.Text_IO.Put_Line (Constant_Pool'Image);
 
       Ada.Text_IO.Put_Line (Magic'Image);
       Ada.Text_IO.Put_Line (Major_Version'Image);
