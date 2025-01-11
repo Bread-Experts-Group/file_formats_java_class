@@ -1,5 +1,7 @@
 pragma Ada_2022;
 
+with Ada.Unchecked_Conversion;
+
 --  testing
 with Ada.Text_IO;
 --  testing end
@@ -251,6 +253,9 @@ package body File_Formats.Java.Class is
       Minor_Version : u2.Big_Endian;
       Major_Version : u2.Big_Endian;
       Constant_Pool : Constant_Pool_Maps.Map;
+      Access_Flags  : Class_File_Access_Flags;
+      
+      function u2_To_Class_Access_Flags is new Ada.Unchecked_Conversion (u2.Big_Endian, Class_File_Access_Flags);
    begin
       pragma
         Compile_Time_Warning (Standard.True, "Read_Class_File unfinished");
@@ -258,11 +263,13 @@ package body File_Formats.Java.Class is
       u2.Big_Endian'Read (Stream, Minor_Version);
       u2.Big_Endian'Read (Stream, Major_Version);
       Read_Constant_Pool_Map (Stream, Constant_Pool);
+      Access_Flags := u2_To_Class_Access_Flags (u2.Big_Endian'Input (Stream));
 
       Ada.Text_IO.Put_Line (Magic'Image);
       Ada.Text_IO.Put_Line (Major_Version'Image);
       Ada.Text_IO.Put_Line (Minor_Version'Image);
       Ada.Text_IO.Put_Line (Constant_Pool'Image);
+      Ada.Text_IO.Put_Line (Access_Flags'Image);
       return
         raise Program_Error with "Unimplemented procedure Read_Class_File";
    end Read_Class_File;
