@@ -169,6 +169,9 @@ package File_Formats.Java.Class is
    record
       Name_Ref : Utf_8_Constant_Pool_Entry;
       case Attribute_Type is
+         when SourceFile =>
+            Source_File : Utf_8_Constant_Pool_Entry;
+
          when others =>
             Data : Raw_Data_Access;
       end case;

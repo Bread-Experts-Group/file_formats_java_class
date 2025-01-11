@@ -14,7 +14,7 @@ begin
       declare
          Name : constant Utf_8_Constant_Pool_Entry :=
            Utf_8_Constant_Pool_Entry
-             (Pool.Element (i2.Big_Endian'Input (Stream)));
+             (Pool.Element (Constant_Pool_Index'Input (Stream)));
       begin
          begin
             Attribute_Type :=
@@ -24,6 +24,15 @@ begin
                Attribute_Type := Other;
          end;
          case Attribute_Type is
+            when SourceFile =>
+               Item.Append
+                 (Class_File_Attribute'
+                    (Attribute_Type => SourceFile,
+                     Name_Ref       => Name,
+                     Source_File    =>
+                       Utf_8_Constant_Pool_Entry
+                         (Pool.Element (Constant_Pool_Index'Input (Stream)))));
+
             when others =>
                declare
                   Data : Raw_Data (1 .. u4.Big_Endian'Input (Stream));
@@ -31,7 +40,7 @@ begin
                   Raw_Data'Read (Stream, Data);
                   Item.Append
                     (Class_File_Attribute'
-                       (Attribute_Type => Attribute_Type,
+                       (Attribute_Type => Other,
                         Name_Ref       => Name,
                         Data           => new Raw_Data'(Data)));
                end;
