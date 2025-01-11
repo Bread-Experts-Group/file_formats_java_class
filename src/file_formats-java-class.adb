@@ -38,13 +38,9 @@ package body File_Formats.Java.Class is
 
    procedure Read_Attribute_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Attribute_Vectors.Vector) is
-   begin
-      pragma
-        Compile_Time_Warning
-          (Standard.True, "Read_Attribute_Vector unimplemented");
-      raise Program_Error with "Unimplemented procedure Read_Attribute_Vector";
-   end Read_Attribute_Vector;
+      Item   : out Attribute_Vectors.Vector;
+      Pool   : Constant_Pool_Maps.Map)
+   is separate;
 
    ----------------------------
    -- Write_Attribute_Vector --

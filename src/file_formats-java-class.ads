@@ -160,9 +160,15 @@ package File_Formats.Java.Class is
       LocalVariableTable,
       Other);
 
+   type Raw_Data is array (u4.Big_Endian range <>) of Byteflippers.Unsigned_8;
+
    type Class_File_Attribute (Attribute_Type : Class_File_Attribute_Type) is
    record
-      Name_Ref : Utf_8_Constant_Pool_Entry_Access;
+      Name_Ref : Utf_8_Constant_Pool_Entry;
+      case Attribute_Type is
+         when others =>
+            Data : access Raw_Data;
+      end case;
    end record;
 
    package Attribute_Vectors is new
@@ -170,7 +176,8 @@ package File_Formats.Java.Class is
 
    procedure Read_Attribute_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Attribute_Vectors.Vector);
+      Item   : out Attribute_Vectors.Vector;
+      Pool   : Constant_Pool_Maps.Map);
 
    procedure Write_Attribute_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;

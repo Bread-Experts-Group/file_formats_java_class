@@ -34,7 +34,7 @@ begin
                        Utf_8_Constant_Pool_Entry (Descriptor),
                      others             => <>);
                begin
-                  Read_Attribute_Vector (Stream, Field.Attributes);
+                  Read_Attribute_Vector (Stream, Field.Attributes, Pool);
                   Item.Append (Field);
                end;
 
@@ -49,7 +49,7 @@ begin
                        Utf_8_Constant_Pool_Entry (Descriptor),
                      others              => <>);
                begin
-                  Read_Attribute_Vector (Stream, Field.Attributes);
+                  Read_Attribute_Vector (Stream, Field.Attributes, Pool);
                   Item.Append (Field);
                end;
          end case;
