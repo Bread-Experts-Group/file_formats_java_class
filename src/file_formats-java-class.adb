@@ -92,7 +92,7 @@ package body File_Formats.Java.Class is
                declare
                   Length : constant u2.Big_Endian :=
                     u2.Big_Endian'Input (Stream);
-                  Bytes  : Standard.String (1 .. Standard.Integer (Length));
+                  Bytes  : Standard.String (1 .. Standard.Integer (Length) - 1);
                begin
                   Standard.String'Read (Stream, Bytes);
                   Item.Include
