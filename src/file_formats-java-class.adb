@@ -125,7 +125,7 @@ package body File_Formats.Java.Class is
       Interfaces      : Interface_Vectors.Vector;
       Fields          : Field_Vectors.Vector;
       Methods         : Method_Vectors.Vector;
-      Attributes    : Attribute_Vectors.Vector;
+      Attributes      : Attribute_Vectors.Vector;
 
       function u2_To_Class_Access_Flags is new
         Ada.Unchecked_Conversion (u2.Big_Endian, Class_File_Access_Flags);
@@ -161,17 +161,26 @@ package body File_Formats.Java.Class is
          (if Access_Flags.IS_INTERFACE then IS_INTERFACE else CLASS));
       Read_Attribute_Vector (Stream, Attributes, Constant_Pool);
 
-      Ada.Text_IO.Put_Line ("Magic        :" & Magic'Image);
-      Ada.Text_IO.Put_Line ("Major V#     :" & Major_Version'Image);
-      Ada.Text_IO.Put_Line ("Minor V#     :" & Minor_Version'Image);
-      Ada.Text_IO.Put_Line ("Constant Pool:" & Constant_Pool'Image);
-      Ada.Text_IO.Put_Line ("Access       :" & Access_Flags'Image);
-      Ada.Text_IO.Put_Line ("This  #      :" & This_Class_Idx'Image);
-      Ada.Text_IO.Put_Line ("Super #      :" & Super_Class_Idx'Image);
-      Ada.Text_IO.Put_Line ("Interfaces   :" & Interfaces'Image);
-      Ada.Text_IO.Put_Line ("Fields       :" & Fields'Image);
-      Ada.Text_IO.Put_Line ("Methods      :" & Methods'Image);
-      Ada.Text_IO.Put_Line ("Attributes   :" & Attributes'Image);
+      return
+        (Magic,
+         Minor_Version,
+         Major_Version,
+         Constant_Pool,
+         Access_Flags,
+           new Class_Constant_Pool_Entry'
+             (Class_Constant_Pool_Entry
+                (Constant_Pool.Element (This_Class_Idx))),
+
+           (if Constant_Pool.Contains (Super_Class_Idx)
+            then
+              new Class_Constant_Pool_Entry'
+                (Class_Constant_Pool_Entry
+                   (Constant_Pool.Element (Super_Class_Idx)))
+            else null),
+         Interfaces,
+         Fields,
+         Methods,
+         Attributes);
    end Read_Class_File;
 
    ----------------------

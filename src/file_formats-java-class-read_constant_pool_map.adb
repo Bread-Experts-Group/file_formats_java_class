@@ -64,8 +64,6 @@ is
                  (Index,
                   Constant_Pool_Entry'
                     (STRING,
-
-
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element (Incomplete.String_Ref)))));
@@ -75,8 +73,6 @@ is
                  (Index,
                   Constant_Pool_Entry'
                     (CLASS,
-
-
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element (Incomplete.Qualified_Name_Ref)))));
@@ -86,13 +82,9 @@ is
                  (Index,
                   Constant_Pool_Entry'
                     (NAME_AND_TYPE,
-
-
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element (Incomplete.Name_Ref))),
-
-
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element (Incomplete.Descriptor_Ref)))));
@@ -118,8 +110,6 @@ is
                            Constant_Pool_Entry'
                              (FIELD_REFERENCE,
                               new Class_Constant_Pool_Entry'(Class),
-
-
                                 new Name_And_Type_Constant_Pool_Entry'
                                   (Name_And_Type)));
 
@@ -129,8 +119,6 @@ is
                            Constant_Pool_Entry'
                              (METHOD_REFERENCE,
                               new Class_Constant_Pool_Entry'(Class),
-
-
                                 new Name_And_Type_Constant_Pool_Entry'
                                   (Name_And_Type)));
 
@@ -140,8 +128,6 @@ is
                            Constant_Pool_Entry'
                              (INTERFACE_METHOD_REFERENCE,
                               new Class_Constant_Pool_Entry'(Class),
-
-
                                 new Name_And_Type_Constant_Pool_Entry'
                                   (Name_And_Type)));
 
@@ -270,8 +256,6 @@ begin
                               Constant_Pool_Entry'
                                 (FIELD_REFERENCE,
                                  new Class_Constant_Pool_Entry'(Class),
-
-
                                    new Name_And_Type_Constant_Pool_Entry'
                                      (Name_And_Type)));
 
@@ -281,8 +265,6 @@ begin
                               Constant_Pool_Entry'
                                 (METHOD_REFERENCE,
                                  new Class_Constant_Pool_Entry'(Class),
-
-
                                    new Name_And_Type_Constant_Pool_Entry'
                                      (Name_And_Type)));
 
@@ -292,8 +274,6 @@ begin
                               Constant_Pool_Entry'
                                 (INTERFACE_METHOD_REFERENCE,
                                  new Class_Constant_Pool_Entry'(Class),
-
-
                                    new Name_And_Type_Constant_Pool_Entry'
                                      (Name_And_Type)));
 

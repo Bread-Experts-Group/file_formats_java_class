@@ -12,7 +12,7 @@ is
 begin
    for Index in 1 .. u2.Big_Endian'Input (Stream) loop
       declare
-         Name : Utf_8_Constant_Pool_Entry :=
+         Name : constant Utf_8_Constant_Pool_Entry :=
            Utf_8_Constant_Pool_Entry
              (Pool.Element (i2.Big_Endian'Input (Stream)));
       begin
