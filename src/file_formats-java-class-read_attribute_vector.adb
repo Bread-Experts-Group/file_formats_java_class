@@ -34,7 +34,7 @@ begin
                        Utf_8_Constant_Pool_Entry
                          (Pool.Element (Constant_Pool_Index'Input (Stream)))));
 
-            when others =>
+            when Other =>
                declare
                   Data : Raw_Data (1 .. Length);
                begin
@@ -45,6 +45,9 @@ begin
                         Name_Ref       => Name,
                         Data           => new Raw_Data'(Data)));
                end;
+            
+            when others =>
+               raise Constraint_Error with Attribute_Type'Image;
          end case;
       end;
    end loop;
