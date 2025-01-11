@@ -145,7 +145,7 @@ package File_Formats.Java.Class is
    package Interface_Vectors is new
      Ada.Containers.Vectors
        (Positive,
-        Class_Constant_Pool_Entry_Access_Optional);
+        Class_Constant_Pool_Entry);
 
    type Class_File_Environment is (CLASS, IS_INTERFACE);
 
@@ -185,6 +185,11 @@ package File_Formats.Java.Class is
    package CFA_LineNumberTable_Line_Vectors is new
      Ada.Containers.Vectors (Positive, CFA_LineNumberTable_Line_Entry);
 
+   package Class_Vectors is new
+     Ada.Containers.Indefinite_Vectors
+       (Positive,
+        Class_Constant_Pool_Entry);
+
    type Class_File_Attribute (Attribute_Type : Class_File_Attribute_Type) is
    record
       Name_Ref : Utf_8_Constant_Pool_Entry;
@@ -198,6 +203,9 @@ package File_Formats.Java.Class is
             Code                 : Raw_Data_Access;
             Exception_Table      : CFA_Code_Exception_Vectors.Vector;
             Attributes           : Attribute_Vector_Access;
+         
+         when Exceptions =>
+            Exceptions_Table : Class_Vectors.Vector;
 
          when LineNumberTable =>
             Line_Number_Table : CFA_LineNumberTable_Line_Vectors.Vector;

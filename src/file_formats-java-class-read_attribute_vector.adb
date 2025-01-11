@@ -83,6 +83,16 @@ begin
                           new Attribute_Vector'(Attributes)));
                end;
 
+            when Exceptions =>
+               declare
+                  New_Entry : Class_File_Attribute := (Attribute_Type => Exceptions, Name_Ref => Name, others => <>);
+               begin
+                  for Index in 1 .. u2.Big_Endian'Input (Stream) loop
+                     New_Entry.Exceptions_Table.Append (Class_Constant_Pool_Entry (Pool.Element (Constant_Pool_Index'Input (Stream))));
+                  end loop;
+                  Item.Append (New_Entry);
+               end;
+
             when LineNumberTable =>
                declare
                   New_Entry : Class_File_Attribute := (Attribute_Type => LineNumberTable, Name_Ref => Name, others => <>);
