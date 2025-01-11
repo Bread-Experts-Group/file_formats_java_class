@@ -87,7 +87,52 @@ package body File_Formats.Java.Class is
 
       procedure Handle_Incomplete_Entry (Index : Constant_Pool_Index) is
       begin
-         Ada.Text_IO.Put_Line ("Handle entry at" & Index'Image);
+         if not Incomplete_Map.Contains (Index) then
+            return;
+         end if;
+         declare
+            Incomplete : Incomplete_Entry := Incomplete_Map.Element (Index);
+         begin
+            case Incomplete.Tag is
+               when STRING =>
+                  Item.Include
+                    (Index,
+                     Constant_Pool_Entry'
+                       (STRING,
+
+                          new Utf_8_Constant_Pool_Entry'
+                            (Utf_8_Constant_Pool_Entry
+                               (Item.Element (Incomplete.String_Ref)))));
+
+               when CLASS =>
+                  Item.Include
+                    (Index,
+                     Constant_Pool_Entry'
+                       (CLASS,
+
+                          new Utf_8_Constant_Pool_Entry'
+                            (Utf_8_Constant_Pool_Entry
+                               (Item.Element
+                                  (Incomplete.Qualified_Name_Ref)))));
+
+               when NAME_AND_TYPE =>
+                  Item.Include
+                    (Index,
+                     Constant_Pool_Entry'
+                       (NAME_AND_TYPE,
+
+                          new Utf_8_Constant_Pool_Entry'
+                            (Utf_8_Constant_Pool_Entry
+                               (Item.Element (Incomplete.Name_Ref))),
+
+                          new Utf_8_Constant_Pool_Entry'
+                            (Utf_8_Constant_Pool_Entry
+                               (Item.Element (Incomplete.Descriptor_Ref)))));
+
+               when others =>
+                  Ada.Text_IO.Put_Line ("TODO References");
+            end case;
+         end;
       end Handle_Incomplete_Entry;
 
       use type i2.Big_Endian;
