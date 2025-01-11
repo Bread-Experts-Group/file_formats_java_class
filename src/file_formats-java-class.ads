@@ -1,3 +1,4 @@
+with Ada.Containers.Indefinite_Ordered_Maps;
 with Ada.Containers.Indefinite_Vectors;
 with Ada.Containers.Vectors;
 with Ada.Streams;
@@ -101,19 +102,20 @@ package File_Formats.Java.Class is
    for Constant_Pool_Entry'Write use Write_Constant_Pool_Entry;
 
    subtype Constant_Pool_Index is i2.Big_Endian range 1 .. i2.Big_Endian'Last;
+   use type i2.Big_Endian;
 
-   package Constant_Pool_Vectors is new
-     Ada.Containers.Indefinite_Vectors
+   package Constant_Pool_Maps is new
+     Ada.Containers.Indefinite_Ordered_Maps
        (Constant_Pool_Index,
         Constant_Pool_Entry);
 
-   procedure Read_Constant_Pool_Vector
+   procedure Read_Constant_Pool_Map
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Constant_Pool_Vectors.Vector);
+      Item   : out Constant_Pool_Maps.Map);
 
-   procedure Write_Constant_Pool_Vector
+   procedure Write_Constant_Pool_Map
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : Constant_Pool_Vectors.Vector);
+      Item   : Constant_Pool_Maps.Map);
 
    type Utf_8_Constant_Pool_Entry is new Constant_Pool_Entry (UTF_8);
    type Class_Constant_Pool_Entry is new Constant_Pool_Entry (CLASS);
@@ -342,7 +344,7 @@ package File_Formats.Java.Class is
       Magic         : Class_File_Magic;
       Minor_Version : u2.Big_Endian;
       Major_Version : u2.Big_Endian;
-      Constant_Pool : Constant_Pool_Vectors.Vector;
+      Constant_Pool : Constant_Pool_Maps.Map;
       Access_Flags  : Class_File_Access_Flags;
       This_Class    : Class_Constant_Pool_Entry_Access;
       Super_Class   : Class_Constant_Pool_Entry_Access_Optional;

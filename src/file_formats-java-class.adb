@@ -40,13 +40,13 @@ package body File_Formats.Java.Class is
         with "Unimplemented procedure Write_Constant_Pool_Entry";
    end Write_Constant_Pool_Entry;
 
-   -------------------------------
-   -- Read_Constant_Pool_Vector --
-   -------------------------------
+   ----------------------------
+   -- Read_Constant_Pool_Map --
+   ----------------------------
 
-   procedure Read_Constant_Pool_Vector
+   procedure Read_Constant_Pool_Map
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Constant_Pool_Vectors.Vector)
+      Item   : out Constant_Pool_Maps.Map)
    is
       Constant_Pool_Count, Constant_Pool_Position : Constant_Pool_Index;
       Read_Tag                                    : Constant_Pool_Entry_Tag;
@@ -82,9 +82,8 @@ package body File_Formats.Java.Class is
    begin
       pragma
         Compile_Time_Warning
-          (Standard.True, "Read_Constant_Pool_Vector unfinished");
+          (Standard.True, "Read_Constant_Pool_Map unfinished");
       i2.Big_Endian'Read (Stream, Constant_Pool_Count);
-      Item.Set_Length (Ada.Containers.Count_Type (Constant_Pool_Count));
       Constant_Pool_Position := 1;
       loop
          Constant_Pool_Entry_Tag'Read (Stream, Read_Tag);
@@ -96,46 +95,46 @@ package body File_Formats.Java.Class is
                   Bytes  : Standard.String (1 .. Standard.Integer (Length));
                begin
                   Standard.String'Read (Stream, Bytes);
-                  Item.Replace_Element
+                  Item.Replace
                     (Constant_Pool_Position,
                      Constant_Pool_Entry'(UTF_8, new Standard.String'(Bytes)));
                end;
 
             when INTEGER =>
-               Item.Replace_Element
+               Item.Replace
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (INTEGER,
                      Standard.Integer (i4.Big_Endian'Input (Stream))));
 
             when FLOAT =>
-               Item.Replace_Element
+               Item.Replace
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (FLOAT, u4_To_Float (u4.Big_Endian'Input (Stream))));
 
             when LONG =>
-               Item.Replace_Element
+               Item.Replace
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (LONG,
                      Standard.Long_Integer (i8.Big_Endian'Input (Stream))));
 
             when DOUBLE =>
-               Item.Replace_Element
+               Item.Replace
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (DOUBLE, u8_To_Double (u8.Big_Endian'Input (Stream))));
 
             when CLASS | STRING =>
                declare
-                  Index : Constant_Pool_Vectors.Cursor :=
-                    Item.To_Cursor (Constant_Pool_Index'Input (Stream));
+                  Index : Constant_Pool_Index :=
+                    Constant_Pool_Index'Input (Stream);
                begin
-                  if Index.Has_Element then
-                    Ada.Text_IO.Put_Line ("Present?" & Index.To_Index'Image & ' ' & Index.Element'Image);
+                  if Item.Contains (Index) then
+                    Ada.Text_IO.Put_Line ("Present?" & Index'Image & ' ' & Item.Element (Index)'Image);
                   else
-                    Ada.Text_IO.Put_Line ("Not Present" & Index.To_Index'Image);
+                    Ada.Text_IO.Put_Line ("Not Present" & Index'Image);
                   end if;
                end;
 
@@ -147,23 +146,23 @@ package body File_Formats.Java.Class is
          exit when Constant_Pool_Position = Constant_Pool_Count;
       end loop;
       raise Program_Error
-        with "Unimplemented procedure Read_Constant_Pool_Vector";
-   end Read_Constant_Pool_Vector;
+        with "Unimplemented procedure Read_Constant_Pool_Map";
+   end Read_Constant_Pool_Map;
 
-   --------------------------------
-   -- Write_Constant_Pool_Vector --
-   --------------------------------
+   -----------------------------
+   -- Write_Constant_Pool_Map --
+   -----------------------------
 
-   procedure Write_Constant_Pool_Vector
+   procedure Write_Constant_Pool_Map
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : Constant_Pool_Vectors.Vector) is
+      Item   : Constant_Pool_Maps.Map) is
    begin
       pragma
         Compile_Time_Warning
-          (Standard.True, "Write_Constant_Pool_Vector unimplemented");
+          (Standard.True, "Write_Constant_Pool_Map unimplemented");
       raise Program_Error
-        with "Unimplemented procedure Write_Constant_Pool_Vector";
-   end Write_Constant_Pool_Vector;
+        with "Unimplemented procedure Write_Constant_Pool_Map";
+   end Write_Constant_Pool_Map;
 
    -------------------------------
    -- Read_Class_File_Attribute --
@@ -354,14 +353,14 @@ package body File_Formats.Java.Class is
       Magic         : Class_File_Magic;
       Minor_Version : u2.Big_Endian;
       Major_Version : u2.Big_Endian;
-      Constant_Pool : Constant_Pool_Vectors.Vector;
+      Constant_Pool : Constant_Pool_Maps.Map;
    begin
       pragma
         Compile_Time_Warning (Standard.True, "Read_Class_File unfinished");
       Class_File_Magic'Read (Stream, Magic);
       u2.Big_Endian'Read (Stream, Minor_Version);
       u2.Big_Endian'Read (Stream, Major_Version);
-      Read_Constant_Pool_Vector (Stream, Constant_Pool);
+      Read_Constant_Pool_Map (Stream, Constant_Pool);
 
       Ada.Text_IO.Put_Line (Magic'Image);
       Ada.Text_IO.Put_Line (Major_Version'Image);
