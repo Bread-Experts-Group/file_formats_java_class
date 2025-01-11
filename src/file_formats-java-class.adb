@@ -119,12 +119,14 @@ package body File_Formats.Java.Class is
                   Constant_Pool_Entry'
                     (LONG,
                      Standard.Long_Integer (i8.Big_Endian'Input (Stream))));
+               Constant_Pool_Position := @ + 1;
 
             when DOUBLE =>
                Item.Include
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (DOUBLE, u8_To_Double (u8.Big_Endian'Input (Stream))));
+               Constant_Pool_Position := @ + 1;
 
             when CLASS | STRING =>
                declare
@@ -185,6 +187,7 @@ package body File_Formats.Java.Class is
          Constant_Pool_Position := @ + 1;
          exit when Constant_Pool_Position = Constant_Pool_Count;
       end loop;
+      Ada.Text_IO.Put_Line ("Constant Pool: " & Item'Image);
       raise Program_Error
         with "Unimplemented procedure Read_Constant_Pool_Map";
    end Read_Constant_Pool_Map;
