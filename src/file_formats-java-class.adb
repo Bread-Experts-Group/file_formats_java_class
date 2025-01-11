@@ -2,6 +2,8 @@ pragma Ada_2022;
 
 with Ada.Unchecked_Conversion;
 
+with Ada.Text_IO.Put_Line;
+
 package body File_Formats.Java.Class is
 
    ----------------------------
@@ -138,6 +140,7 @@ package body File_Formats.Java.Class is
       begin
          i2.Big_Endian'Read (Stream, Interfaces_Count);
          for Index in 1 .. Interfaces_Count loop
+            Ada.Text_IO.Put_Line (Constant_Pool.Element (Index)'Image);
             Interfaces.Append
               (Class_Constant_Pool_Entry (Constant_Pool.Element (Index)));
          end loop;
