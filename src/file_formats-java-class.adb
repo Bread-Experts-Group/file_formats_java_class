@@ -133,7 +133,7 @@ package body File_Formats.Java.Class is
                     Item.To_Cursor (Constant_Pool_Index'Input (Stream));
                begin
                   if Index.Has_Element then
-                    Ada.Text_IO.Put_Line ("Present" & Index.To_Index'Image);
+                    Ada.Text_IO.Put_Line ("Present?" & Index.To_Index'Image & ' ' & Index.Element'Image);
                   else
                     Ada.Text_IO.Put_Line ("Not Present" & Index.To_Index'Image);
                   end if;
