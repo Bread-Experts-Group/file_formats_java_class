@@ -15,6 +15,7 @@ begin
          Name : constant Utf_8_Constant_Pool_Entry :=
            Utf_8_Constant_Pool_Entry
              (Pool.Element (Constant_Pool_Index'Input (Stream)));
+         Length : constant u4.Big_Endian := u4.Big_Endian'Input (Stream);
       begin
          begin
             Attribute_Type :=
@@ -35,7 +36,7 @@ begin
 
             when others =>
                declare
-                  Data : Raw_Data (1 .. u4.Big_Endian'Input (Stream));
+                  Data : Raw_Data (1 .. Length);
                begin
                   Raw_Data'Read (Stream, Data);
                   Item.Append
