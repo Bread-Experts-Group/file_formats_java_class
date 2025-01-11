@@ -135,7 +135,7 @@ package File_Formats.Java.Class is
       SUPER        : Boolean;
       IS_INTERFACE : Boolean;
       IS_ABSTRACT  : Boolean;
-   end record with Size => 16, Pack, Predicate =>
+   end record with Size => 16, Predicate =>
        not (Class_File_Access_Flags.IS_INTERFACE
             and then Class_File_Access_Flags.FINAL);
 
@@ -206,7 +206,7 @@ package File_Formats.Java.Class is
       FINAL        : Boolean;
       VOLATILE     : Boolean;
       TRANSIENT    : Boolean;
-   end record with Size => 16, Pack;
+   end record with Size => 16;
 
    for Class_File_Field_Access_Flags use record
       PUBLIC       at 0 range 0 .. 0;
@@ -273,7 +273,7 @@ package File_Formats.Java.Class is
       IS_SYNCHRONIZED : Boolean;
       NATIVE          : Boolean;
       IS_ABSTRACT     : Boolean;
-   end record with Size => 16, Pack;
+   end record with Size => 16;
 
    for Class_File_Method_Access_Flags use record
       PUBLIC          at 0 range 0 .. 0;

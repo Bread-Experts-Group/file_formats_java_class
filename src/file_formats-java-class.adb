@@ -278,10 +278,19 @@ package body File_Formats.Java.Class is
       Ada.Text_IO.Put_Line ("This  #      :" & This_Class_Idx'Image);
       Ada.Text_IO.Put_Line ("Super #      :" & Super_Class_Idx'Image);
       declare
-        Interfaces_Count : u2.Big_Endian;
+        Interfaces_Count : i2.Big_Endian;
       begin
-        u2.Big_Endian'Read (Stream, Major_Version);
+        i2.Big_Endian'Read (Stream, Interfaces_Count);
         Ada.Text_IO.Put_Line ("Interfaces # :" & Interfaces_Count'Image);
+        for Index in 1 .. Interfaces_Count loop
+          Interfaces.Append (new Class_Constant_Pool_Entry'(Class_Constant_Pool_Entry (Constant_Pool.Element (Index))));
+        end loop;
+      end;
+      declare
+        Fields_Count : u2.Big_Endian;
+      begin
+        u2.Big_Endian'Read (Stream, Fields_Count);
+        Ada.Text_IO.Put_Line ("Fields     # :" & Fields_Count'Image);
       end;
       return
         raise Program_Error with "Unimplemented procedure Read_Class_File";
