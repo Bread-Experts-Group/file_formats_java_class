@@ -128,13 +128,53 @@ package body File_Formats.Java.Class is
 
             when CLASS | STRING =>
                declare
-                  Index : Constant_Pool_Index :=
+                  Name_Index : Constant_Pool_Index :=
                     Constant_Pool_Index'Input (Stream);
                begin
-                  if Item.Contains (Index) then
-                    Ada.Text_IO.Put_Line ("Present?" & Index'Image & ' ' & Item.Element (Index)'Image);
+                  if Item.Contains (Name_Index) then
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Present?" & Name_Index'Image & ' ' & Item.Element (Name_Index)'Image);
                   else
-                    Ada.Text_IO.Put_Line ("Not Present" & Index'Image);
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Not Present" & Name_Index'Image);
+                  end if;
+               end;
+
+            when FIELD_REFERENCE | METHOD_REFERENCE | INTERFACE_METHOD_REFERENCE =>
+               declare
+                  Class_Index : Constant_Pool_Index :=
+                    Constant_Pool_Index'Input (Stream);
+                  Name_And_Type_Index : Constant_Pool_Index :=
+                    Constant_Pool_Index'Input (Stream);
+               begin
+                  if Item.Contains (Class_Index) then
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Class Idx Present?" & Class_Index'Image & ' ' & Item.Element (Class_Index)'Image);
+                  else
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Class Idx Not Present" & Class_Index'Image);
+                  end if;
+
+                  if Item.Contains (Name_And_Type_Index) then
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Name_And_Index Idx Present?" & Name_And_Type_Index'Image & ' ' & Item.Element (Name_And_Type_Index)'Image);
+                  else
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Name_And_Index Idx Not Present" & Name_And_Type_Index'Image);
+                  end if;
+               end;
+
+            when NAME_AND_TYPE =>
+               declare
+                  Name_Index : Constant_Pool_Index :=
+                    Constant_Pool_Index'Input (Stream);
+                  Descriptor_Index : Constant_Pool_Index :=
+                    Constant_Pool_Index'Input (Stream);
+               begin
+                  if Item.Contains (Name_Index) then
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Name Idx Present?" & Name_Index'Image & ' ' & Item.Element (Name_Index)'Image);
+                  else
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Name Idx Not Present" & Name_Index'Image);
+                  end if;
+
+                  if Item.Contains (Descriptor_Index) then
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Descriptor Idx Present?" & Descriptor_Index'Image & ' ' & Item.Element (Descriptor_Index)'Image);
+                  else
+                    Ada.Text_IO.Put_Line (Read_Tag'Image & " Descriptor Idx Not Present" & Descriptor_Index'Image);
                   end if;
                end;
 
