@@ -85,7 +85,7 @@ begin
 
             when LineNumberTable =>
                declare
-                  New_Entry : Class_File_Attribute (LineNumberTable);
+                  New_Entry : Class_File_Attribute := (Attribute_Type => LineNumberTable, Name_Ref => Name, others => <>);
                begin
                   for Index in 1 .. u2.Big_Endian'Input (Stream) loop
                      New_Entry.Line_Number_Table.Append (CFA_LineNumberTable_Line_Entry'(u2.Big_Endian'Input (Stream), u2.Big_Endian'Input (Stream)));
