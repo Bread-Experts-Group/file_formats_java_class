@@ -28,7 +28,8 @@ package File_Formats.Java.Class is
       FIELD_REFERENCE,
       METHOD_REFERENCE,
       INTERFACE_METHOD_REFERENCE,
-      NAME_AND_TYPE) with Size => 8;
+      NAME_AND_TYPE)
+   with Size => 8;
 
    for Constant_Pool_Entry_Tag use
      (UTF_8                      => 1,
@@ -46,7 +47,7 @@ package File_Formats.Java.Class is
    use type u2.Big_Endian;
 
    subtype Class_Utf_8_String is Standard.String
-      with Predicate => Class_Utf_8_String'Length <= u2.Big_Endian'Last;
+   with Predicate => Class_Utf_8_String'Length <= u2.Big_Endian'Last;
 
    type Class_Constant_Pool_Entry;
    type Utf_8_Constant_Pool_Entry;
@@ -56,34 +57,41 @@ package File_Formats.Java.Class is
       case Tag is
          when UTF_8 =>
             Utf_Bytes : not null access Class_Utf_8_String;
+
          when INTEGER =>
             Int_Bytes : Standard.Integer;
+
          when FLOAT =>
             Float_Bytes : Standard.Float;
+
          when LONG =>
             Long_Bytes : Standard.Long_Integer;
+
          when DOUBLE =>
             Double_Bytes : Standard.Long_Float;
+
          when CLASS =>
             Qualified_Name_Ref : not null access Utf_8_Constant_Pool_Entry;
+
          when STRING =>
             String_Ref : not null access Utf_8_Constant_Pool_Entry;
-         when FIELD_REFERENCE  |
-              METHOD_REFERENCE |
-              INTERFACE_METHOD_REFERENCE =>
-            Class_Ref         :
-               not null access Class_Constant_Pool_Entry;
+
+         when FIELD_REFERENCE
+               | METHOD_REFERENCE
+               | INTERFACE_METHOD_REFERENCE =>
+            Class_Ref         : not null access Class_Constant_Pool_Entry;
             Name_And_Type_Ref :
-               not null access Name_And_Type_Constant_Pool_Entry;
+              not null access Name_And_Type_Constant_Pool_Entry;
+
          when NAME_AND_TYPE =>
             Name_Ref, Descriptor_Ref :
-               not null access Utf_8_Constant_Pool_Entry;
+              not null access Utf_8_Constant_Pool_Entry;
       end case;
    end record;
 
    function Read_Constant_Pool_Entry
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-   return Constant_Pool_Entry;
+      return Constant_Pool_Entry;
 
    procedure Write_Constant_Pool_Entry
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -94,8 +102,10 @@ package File_Formats.Java.Class is
 
    subtype Constant_Pool_Index is i2.Big_Endian range 1 .. i2.Big_Endian'Last;
 
-   package Constant_Pool_Vectors is new Ada.Containers.Indefinite_Vectors
-         (Constant_Pool_Index, Constant_Pool_Entry);
+   package Constant_Pool_Vectors is new
+     Ada.Containers.Indefinite_Vectors
+       (Constant_Pool_Index,
+        Constant_Pool_Entry);
 
    procedure Read_Constant_Pool_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -105,26 +115,20 @@ package File_Formats.Java.Class is
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
       Item   : Constant_Pool_Vectors.Vector);
 
-   type Utf_8_Constant_Pool_Entry is
-      new Constant_Pool_Entry (UTF_8);
-   type Class_Constant_Pool_Entry is
-      new Constant_Pool_Entry (CLASS);
+   type Utf_8_Constant_Pool_Entry is new Constant_Pool_Entry (UTF_8);
+   type Class_Constant_Pool_Entry is new Constant_Pool_Entry (CLASS);
    type Name_And_Type_Constant_Pool_Entry is
-      new Constant_Pool_Entry (NAME_AND_TYPE);
+     new Constant_Pool_Entry (NAME_AND_TYPE);
 
    type Utf_8_Constant_Pool_Entry_Access is
-      not null access Utf_8_Constant_Pool_Entry;
+     not null access Utf_8_Constant_Pool_Entry;
    type Class_Constant_Pool_Entry_Access is
-      not null access Class_Constant_Pool_Entry;
+     not null access Class_Constant_Pool_Entry;
    type Class_Constant_Pool_Entry_Access_Optional is
-      access Class_Constant_Pool_Entry;
+     access Class_Constant_Pool_Entry;
 
-   type Class_File_Access is
-     (PUBLIC,
-      FINAL,
-      SUPER,
-      IS_INTERFACE,
-      IS_ABSTRACT) with Size => 16;
+   type Class_File_Access is (PUBLIC, FINAL, SUPER, IS_INTERFACE, IS_ABSTRACT)
+   with Size => 16;
 
    for Class_File_Access use
      (PUBLIC       => 2 ** 0,
@@ -134,21 +138,19 @@ package File_Formats.Java.Class is
       IS_ABSTRACT  => 2 ** 10);
 
    type Class_File_Access_Flags is
-      array (Class_File_Access'First .. Class_File_Access'Last)
-      of Boolean with
-         Component_Size => 1,
-         Predicate =>
-            not (Class_File_Access_Flags (IS_INTERFACE) and then
-                 Class_File_Access_Flags (FINAL));
+     array (Class_File_Access'First .. Class_File_Access'Last) of Boolean
+   with
+     Component_Size => 1,
+     Predicate =>
+       not (Class_File_Access_Flags (IS_INTERFACE)
+            and then Class_File_Access_Flags (FINAL));
 
    package Interface_Vectors is new
-      Ada.Containers.Vectors (Positive,
-                              Class_Constant_Pool_Entry_Access_Optional);
+     Ada.Containers.Vectors
+       (Positive,
+        Class_Constant_Pool_Entry_Access_Optional);
 
-   type Class_File_Environment is
-     (CLASS,
-      INSTANCE,
-      IS_INTERFACE);
+   type Class_File_Environment is (CLASS, INSTANCE, IS_INTERFACE);
 
    ---------------------------
    -- Class File Attributes --
@@ -163,14 +165,14 @@ package File_Formats.Java.Class is
       LocalVariableTable,
       Other);
 
-   type Class_File_Attribute (Attribute_Type : Class_File_Attribute_Type)
-   is record
+   type Class_File_Attribute (Attribute_Type : Class_File_Attribute_Type) is
+   record
       Name_Ref : Utf_8_Constant_Pool_Entry_Access;
    end record;
 
    function Read_Class_File_Attribute
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-   return Class_File_Attribute;
+      return Class_File_Attribute;
 
    procedure Write_Class_File_Attribute
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -180,7 +182,7 @@ package File_Formats.Java.Class is
    for Class_File_Attribute'Write use Write_Class_File_Attribute;
 
    package Attribute_Vectors is new
-      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Attribute);
+     Ada.Containers.Indefinite_Vectors (Positive, Class_File_Attribute);
 
    procedure Read_Attribute_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -195,13 +197,8 @@ package File_Formats.Java.Class is
    -----------------------
 
    type Class_File_Field_Access is
-     (PUBLIC,
-      IS_PRIVATE,
-      IS_PROTECTED,
-      STATIC,
-      FINAL,
-      VOLATILE,
-      TRANSIENT) with Size => 16;
+     (PUBLIC, IS_PRIVATE, IS_PROTECTED, STATIC, FINAL, VOLATILE, TRANSIENT)
+   with Size => 16;
 
    for Class_File_Field_Access use
      (PUBLIC       => 2 ** 0,
@@ -213,16 +210,17 @@ package File_Formats.Java.Class is
       TRANSIENT    => 2 ** 7);
 
    type Class_File_Field_Access_Flags is
-      array (Class_File_Field_Access'First .. Class_File_Field_Access'Last)
-      of Boolean with Component_Size => 1;
+     array (Class_File_Field_Access'First .. Class_File_Field_Access'Last)
+     of Boolean
+   with Component_Size => 1;
 
-   type Class_File_Field_Access_Flags_Any is
-      new Class_File_Field_Access_Flags
-      with Predicate =>
-         not (Class_File_Field_Access_Flags_Any (IS_PRIVATE) or else
-              Class_File_Field_Access_Flags_Any (IS_PROTECTED) or else
-              Class_File_Field_Access_Flags_Any (VOLATILE) or else
-              Class_File_Field_Access_Flags_Any (TRANSIENT));
+   type Class_File_Field_Access_Flags_Any is new Class_File_Field_Access_Flags
+   with
+     Predicate =>
+       not (Class_File_Field_Access_Flags_Any (IS_PRIVATE)
+            or else Class_File_Field_Access_Flags_Any (IS_PROTECTED)
+            or else Class_File_Field_Access_Flags_Any (VOLATILE)
+            or else Class_File_Field_Access_Flags_Any (TRANSIENT));
 
    type Class_File_Field (Environment : Class_File_Environment) is record
       Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry_Access;
@@ -230,6 +228,7 @@ package File_Formats.Java.Class is
       case Environment is
          when CLASS =>
             Access_Flags_Class : Class_File_Field_Access_Flags;
+
          when others =>
             Access_Flags_Others : Class_File_Field_Access_Flags_Any;
       end case;
@@ -237,7 +236,7 @@ package File_Formats.Java.Class is
 
    function Read_Class_File_Field
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-   return Class_File_Field;
+      return Class_File_Field;
 
    procedure Write_Class_File_Field
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -247,7 +246,7 @@ package File_Formats.Java.Class is
    for Class_File_Field'Write use Write_Class_File_Field;
 
    package Field_Vectors is new
-      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Field);
+     Ada.Containers.Indefinite_Vectors (Positive, Class_File_Field);
 
    procedure Read_Field_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -269,7 +268,8 @@ package File_Formats.Java.Class is
       FINAL,
       IS_SYNCHRONIZED,
       NATIVE,
-      IS_ABSTRACT) with Size => 16;
+      IS_ABSTRACT)
+   with Size => 16;
 
    for Class_File_Method_Access use
      (PUBLIC          => 2 ** 0,
@@ -282,18 +282,20 @@ package File_Formats.Java.Class is
       IS_ABSTRACT     => 2 ** 11);
 
    type Class_File_Method_Access_Flags is
-      array (Class_File_Method_Access'First .. Class_File_Method_Access'Last)
-      of Boolean with Component_Size => 1;
+     array (Class_File_Method_Access'First .. Class_File_Method_Access'Last)
+     of Boolean
+   with Component_Size => 1;
 
    type Class_File_Method_Access_Flags_Any is
-      new Class_File_Method_Access_Flags
-      with Predicate =>
-         not (Class_File_Method_Access_Flags_Any (IS_PRIVATE) or else
-              Class_File_Method_Access_Flags_Any (IS_PROTECTED) or else
-              Class_File_Method_Access_Flags_Any (STATIC) or else
-              Class_File_Method_Access_Flags_Any (FINAL) or else
-              Class_File_Method_Access_Flags_Any (IS_SYNCHRONIZED) or else
-              Class_File_Method_Access_Flags_Any (NATIVE));
+     new Class_File_Method_Access_Flags
+   with
+     Predicate =>
+       not (Class_File_Method_Access_Flags_Any (IS_PRIVATE)
+            or else Class_File_Method_Access_Flags_Any (IS_PROTECTED)
+            or else Class_File_Method_Access_Flags_Any (STATIC)
+            or else Class_File_Method_Access_Flags_Any (FINAL)
+            or else Class_File_Method_Access_Flags_Any (IS_SYNCHRONIZED)
+            or else Class_File_Method_Access_Flags_Any (NATIVE));
 
    type Class_File_Method (Environment : Class_File_Environment) is record
       Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry_Access;
@@ -301,6 +303,7 @@ package File_Formats.Java.Class is
       case Environment is
          when CLASS | INSTANCE =>
             Access_Flags_Class : Class_File_Method_Access_Flags;
+
          when others =>
             Access_Flags_Others : Class_File_Method_Access_Flags_Any;
       end case;
@@ -308,7 +311,7 @@ package File_Formats.Java.Class is
 
    function Read_Class_File_Method
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-   return Class_File_Method;
+      return Class_File_Method;
 
    procedure Write_Class_File_Method
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -318,7 +321,7 @@ package File_Formats.Java.Class is
    for Class_File_Method'Write use Write_Class_File_Method;
 
    package Method_Vectors is new
-      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Method);
+     Ada.Containers.Indefinite_Vectors (Positive, Class_File_Method);
 
    procedure Read_Method_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
@@ -333,7 +336,7 @@ package File_Formats.Java.Class is
    ----------------
 
    type Class_File_Magic is
-      new u4.Big_Endian range 16#CAFEBABE# .. 16#CAFEBABE#;
+     new u4.Big_Endian range 16#CAFEBABE# .. 16#CAFEBABE#;
 
    type Class_File is record
       Magic         : Class_File_Magic;
@@ -351,7 +354,7 @@ package File_Formats.Java.Class is
 
    function Read_Class_File
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-   return Class_File;
+      return Class_File;
 
    procedure Write_Class_File
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
