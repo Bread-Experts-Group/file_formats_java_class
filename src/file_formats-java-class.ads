@@ -177,6 +177,14 @@ package File_Formats.Java.Class is
    type Attribute_Vector;
    type Attribute_Vector_Access is not null access Attribute_Vector;
 
+   type CFA_LineNumberTable_Line_Entry is record
+      Program_Counter_Start : u2.Big_Endian;
+      Line_Number           : u2.Big_Endian;
+   end record;
+
+   package CFA_LineNumberTable_Line_Vectors is new
+     Ada.Containers.Vectors (Positive, CFA_LineNumberTable_Line_Entry);
+
    type Class_File_Attribute (Attribute_Type : Class_File_Attribute_Type) is
    record
       Name_Ref : Utf_8_Constant_Pool_Entry;
@@ -190,6 +198,9 @@ package File_Formats.Java.Class is
             Code                 : Raw_Data_Access;
             Exception_Table      : CFA_Code_Exception_Vectors.Vector;
             Attributes           : Attribute_Vector_Access;
+
+         when LineNumberTable =>
+            Line_Number_Table : CFA_LineNumberTable_Line_Vectors.Vector;
 
          when others =>
             Data : Raw_Data_Access;

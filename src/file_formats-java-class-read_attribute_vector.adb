@@ -61,8 +61,6 @@ begin
                              (Start,
                               Stop,
                               Handle,
-
-
                                 (if Class_Idx = 0 then null
                                  else
                                    new Class_Constant_Pool_Entry'
@@ -83,6 +81,16 @@ begin
                         Exception_Table      => Exception_Table,
                         Attributes           =>
                           new Attribute_Vector'(Attributes)));
+               end;
+
+            when LineNumberTable =>
+               declare
+                  New_Entry : Class_File_Attribute (LineNumberTable);
+               begin
+                  for Index in 1 .. u2.Big_Endian'Input (Stream) loop
+                     New_Entry.Line_Number_Table.Append (CFA_LineNumberTable_Line_Entry'(u2.Big_Endian'Input (Stream), u2.Big_Endian'Input (Stream)));
+                  end loop;
+                  Item.Append (New_Entry);
                end;
 
             when Other =>
