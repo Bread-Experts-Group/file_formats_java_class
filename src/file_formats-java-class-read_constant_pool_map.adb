@@ -371,6 +371,4 @@ begin
       Constant_Pool_Position := @ + 1;
       exit when Constant_Pool_Position = Constant_Pool_Count;
    end loop;
-   Ada.Text_IO.Put_Line ("Constant Pool: " & Item'Image);
-   raise Program_Error with "Unimplemented procedure Read_Constant_Pool_Map";
 end Read_Constant_Pool_Map;
