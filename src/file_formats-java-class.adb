@@ -142,30 +142,44 @@ package body File_Formats.Java.Class is
                begin
                   if Item.Contains (Name_Index) then
                      declare
-                        Element : Constant_Pool_Entry :=
-                          Item.Element (Name_Index);
+                        Element : Utf_8_Constant_Pool_Entry :=
+                          Utf_8_Constant_Pool_Entry
+                            (Item.Element (Name_Index));
                      begin
-                        if Element.Tag /= UTF_8 then
-                           raise Program_Error
-                             with
-                               "Element ("
-                               & Element.Tag'Image
-                               & ") at index"
-                               & Name_Index'Image
-                               & " is not the expected tag of UTF_8";
-                        end if;
-                        Item.Include
-                          (Constant_Pool_Position,
-                           Constant_Pool_Entry'
-                             (CLASS,
-                              new Utf_8_Constant_Pool_Entry'
-                                (Utf_8_Constant_Pool_Entry
-                                    (Item.Element (Name_Index)))));
+                        case Read_Tag is
+                           when CLASS =>
+                              Item.Include
+                                (Constant_Pool_Position,
+                                 Constant_Pool_Entry'
+                                   (CLASS,
+                                    new Utf_8_Constant_Pool_Entry'(Element)));
+
+                           when STRING =>
+                              Item.Include
+                                (Constant_Pool_Position,
+                                 Constant_Pool_Entry'
+                                   (STRING,
+                                    new Utf_8_Constant_Pool_Entry'(Element)));
+
+                           when others =>
+                              raise Constraint_Error;
+                        end case;
                      end;
                   else
-                     Incomplete_Map.Include
-                       (Constant_Pool_Position,
-                        Incomplete_Entry'(CLASS, Name_Index));
+                     case Read_Tag is
+                        when CLASS =>
+                           Incomplete_Map.Include
+                             (Constant_Pool_Position,
+                              Incomplete_Entry'(CLASS, Name_Index));
+
+                        when STRING =>
+                           Incomplete_Map.Include
+                             (Constant_Pool_Position,
+                              Incomplete_Entry'(STRING, Name_Index));
+
+                        when others =>
+                           raise Constraint_Error;
+                     end case;
                   end if;
                end;
 
@@ -243,9 +257,6 @@ package body File_Formats.Java.Class is
                         & Descriptor_Index'Image);
                   end if;
                end;
-
-            when others =>
-               raise Program_Error with "Unimplemented tag " & Read_Tag'Image;
          end case;
 
          Constant_Pool_Position := @ + 1;
