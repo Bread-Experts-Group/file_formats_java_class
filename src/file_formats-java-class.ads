@@ -124,17 +124,21 @@ package File_Formats.Java.Class is
       SUPER        : Boolean;
       IS_INTERFACE : Boolean;
       IS_ABSTRACT  : Boolean;
-   end record with Size => 16, Predicate =>
+   end record
+   with
+     Size => 16,
+     Predicate =>
        not (Class_File_Access_Flags.IS_INTERFACE
             and then Class_File_Access_Flags.FINAL);
 
-   for Class_File_Access_Flags use record
-      PUBLIC       at 0 range 0 .. 0;
-      FINAL        at 0 range 4 .. 4;
-      SUPER        at 0 range 5 .. 5;
-      IS_INTERFACE at 1 range 1 .. 1;
-      IS_ABSTRACT  at 1 range 2 .. 2;
-   end record;
+   for Class_File_Access_Flags use
+     record
+       PUBLIC at 0 range 0 .. 0;
+       FINAL at 0 range 4 .. 4;
+       SUPER at 0 range 5 .. 5;
+       IS_INTERFACE at 1 range 1 .. 1;
+       IS_ABSTRACT at 1 range 2 .. 2;
+     end record;
 
    package Interface_Vectors is new
      Ada.Containers.Vectors
@@ -184,17 +188,19 @@ package File_Formats.Java.Class is
       FINAL        : Boolean;
       VOLATILE     : Boolean;
       TRANSIENT    : Boolean;
-   end record with Size => 16;
+   end record
+   with Size => 16;
 
-   for Class_File_Field_Access_Flags use record
-      PUBLIC       at 0 range 0 .. 0;
-      IS_PRIVATE   at 0 range 1 .. 1;
-      IS_PROTECTED at 0 range 2 .. 2;
-      STATIC       at 0 range 3 .. 3;
-      FINAL        at 0 range 4 .. 4;
-      VOLATILE     at 0 range 6 .. 6;
-      TRANSIENT    at 0 range 7 .. 7;
-   end record;
+   for Class_File_Field_Access_Flags use
+     record
+       PUBLIC at 0 range 0 .. 0;
+       IS_PRIVATE at 0 range 1 .. 1;
+       IS_PROTECTED at 0 range 2 .. 2;
+       STATIC at 0 range 3 .. 3;
+       FINAL at 0 range 4 .. 4;
+       VOLATILE at 0 range 6 .. 6;
+       TRANSIENT at 0 range 7 .. 7;
+     end record;
 
    type Class_File_Field_Access_Flags_Any is new Class_File_Field_Access_Flags
    with
@@ -242,18 +248,20 @@ package File_Formats.Java.Class is
       IS_SYNCHRONIZED : Boolean;
       NATIVE          : Boolean;
       IS_ABSTRACT     : Boolean;
-   end record with Size => 16;
+   end record
+   with Size => 16;
 
-   for Class_File_Method_Access_Flags use record
-      PUBLIC          at 0 range 0 .. 0;
-      IS_PRIVATE      at 0 range 1 .. 1;
-      IS_PROTECTED    at 0 range 2 .. 2;
-      STATIC          at 0 range 3 .. 3;
-      FINAL           at 0 range 4 .. 4;
-      IS_SYNCHRONIZED at 0 range 5 .. 5;
-      NATIVE          at 1 range 1 .. 1;
-      IS_ABSTRACT     at 1 range 3 .. 3;
-   end record;
+   for Class_File_Method_Access_Flags use
+     record
+       PUBLIC at 0 range 0 .. 0;
+       IS_PRIVATE at 0 range 1 .. 1;
+       IS_PROTECTED at 0 range 2 .. 2;
+       STATIC at 0 range 3 .. 3;
+       FINAL at 0 range 4 .. 4;
+       IS_SYNCHRONIZED at 0 range 5 .. 5;
+       NATIVE at 1 range 1 .. 1;
+       IS_ABSTRACT at 1 range 3 .. 3;
+     end record;
 
    type Class_File_Method_Access_Flags_Any is
      new Class_File_Method_Access_Flags

@@ -69,7 +69,8 @@ package body File_Formats.Java.Class is
      (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
       Item        : out Field_Vectors.Vector;
       Pool        : Constant_Pool_Maps.Map;
-      Environment : Class_File_Environment) is separate;
+      Environment : Class_File_Environment)
+   is separate;
 
    ------------------------
    -- Write_Field_Vector --
@@ -130,8 +131,9 @@ package body File_Formats.Java.Class is
       Super_Class_Idx : Constant_Pool_Index;
       Interfaces      : Interface_Vectors.Vector;
       Fields          : Field_Vectors.Vector;
-      
-      function u2_To_Class_Access_Flags is new Ada.Unchecked_Conversion (u2.Big_Endian, Class_File_Access_Flags);
+
+      function u2_To_Class_Access_Flags is new
+        Ada.Unchecked_Conversion (u2.Big_Endian, Class_File_Access_Flags);
    begin
       pragma
         Compile_Time_Warning (Standard.True, "Read_Class_File unfinished");
@@ -143,14 +145,20 @@ package body File_Formats.Java.Class is
       Constant_Pool_Index'Read (Stream, This_Class_Idx);
       Constant_Pool_Index'Read (Stream, Super_Class_Idx);
       declare
-        Interfaces_Count : i2.Big_Endian;
+         Interfaces_Count : i2.Big_Endian;
       begin
-        i2.Big_Endian'Read (Stream, Interfaces_Count);
-        for Index in 1 .. Interfaces_Count loop
-          Interfaces.Append (new Class_Constant_Pool_Entry'(Class_Constant_Pool_Entry (Constant_Pool.Element (Index))));
-        end loop;
+         i2.Big_Endian'Read (Stream, Interfaces_Count);
+         for Index in 1 .. Interfaces_Count loop
+            Interfaces.Append
+              (new Class_Constant_Pool_Entry'
+                 (Class_Constant_Pool_Entry (Constant_Pool.Element (Index))));
+         end loop;
       end;
-      Read_Field_Vector (Stream, Fields, Constant_Pool, (if Access_Flags.IS_INTERFACE then IS_INTERFACE else CLASS));
+      Read_Field_Vector
+        (Stream,
+         Fields,
+         Constant_Pool,
+         (if Access_Flags.IS_INTERFACE then IS_INTERFACE else CLASS));
 
       Ada.Text_IO.Put_Line ("Magic        :" & Magic'Image);
       Ada.Text_IO.Put_Line ("Major V#     :" & Major_Version'Image);
