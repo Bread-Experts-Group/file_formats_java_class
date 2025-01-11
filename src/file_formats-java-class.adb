@@ -142,7 +142,7 @@ package body File_Formats.Java.Class is
                begin
                   if Item.Contains (Name_Index) then
                      declare
-                        Element : Utf_8_Constant_Pool_Entry :=
+                        Utf8 : Utf_8_Constant_Pool_Entry :=
                           Utf_8_Constant_Pool_Entry
                             (Item.Element (Name_Index));
                      begin
@@ -152,14 +152,14 @@ package body File_Formats.Java.Class is
                                 (Constant_Pool_Position,
                                  Constant_Pool_Entry'
                                    (CLASS,
-                                    new Utf_8_Constant_Pool_Entry'(Element)));
+                                    new Utf_8_Constant_Pool_Entry'(Utf8)));
 
                            when STRING =>
                               Item.Include
                                 (Constant_Pool_Position,
                                  Constant_Pool_Entry'
                                    (STRING,
-                                    new Utf_8_Constant_Pool_Entry'(Element)));
+                                    new Utf_8_Constant_Pool_Entry'(Utf8)));
 
                            when others =>
                               raise Constraint_Error;
@@ -193,32 +193,81 @@ package body File_Formats.Java.Class is
                   Name_And_Type_Index : Constant_Pool_Index :=
                     Constant_Pool_Index'Input (Stream);
                begin
-                  if Item.Contains (Class_Index) then
-                     Ada.Text_IO.Put_Line
-                       (Read_Tag'Image
-                        & " Class Idx Present?"
-                        & Class_Index'Image
-                        & ' '
-                        & Item.Element (Class_Index)'Image);
-                  else
-                     Ada.Text_IO.Put_Line
-                       (Read_Tag'Image
-                        & " Class Idx Not Present"
-                        & Class_Index'Image);
-                  end if;
+                  if Item.Contains (Class_Index)
+                    and then Item.Contains (Name_And_Type_Index)
+                  then
+                     declare
+                        Class         : Class_Constant_Pool_Entry :=
+                          Class_Constant_Pool_Entry
+                            (Item.Element (Class_Index));
+                        Name_And_Type : Name_And_Type_Constant_Pool_Entry :=
+                          Name_And_Type_Constant_Pool_Entry
+                            (Item.Element (Name_And_Type_Index));
+                     begin
+                        case Read_Tag is
+                           when FIELD_REFERENCE =>
+                              Item.Include
+                                (Constant_Pool_Position,
+                                 Constant_Pool_Entry'
+                                   (FIELD_REFERENCE,
+                                    new Class_Constant_Pool_Entry'(Class),
 
-                  if Item.Contains (Name_And_Type_Index) then
-                     Ada.Text_IO.Put_Line
-                       (Read_Tag'Image
-                        & " Name_And_Index Idx Present?"
-                        & Name_And_Type_Index'Image
-                        & ' '
-                        & Item.Element (Name_And_Type_Index)'Image);
+                                      new Name_And_Type_Constant_Pool_Entry'
+                                        (Name_And_Type)));
+
+                           when METHOD_REFERENCE =>
+                              Item.Include
+                                (Constant_Pool_Position,
+                                 Constant_Pool_Entry'
+                                   (METHOD_REFERENCE,
+                                    new Class_Constant_Pool_Entry'(Class),
+
+                                      new Name_And_Type_Constant_Pool_Entry'
+                                        (Name_And_Type)));
+
+                           when INTERFACE_METHOD_REFERENCE =>
+                              Item.Include
+                                (Constant_Pool_Position,
+                                 Constant_Pool_Entry'
+                                   (INTERFACE_METHOD_REFERENCE,
+                                    new Class_Constant_Pool_Entry'(Class),
+
+                                      new Name_And_Type_Constant_Pool_Entry'
+                                        (Name_And_Type)));
+
+                           when others =>
+                              raise Constraint_Error;
+                        end case;
+                     end;
                   else
-                     Ada.Text_IO.Put_Line
-                       (Read_Tag'Image
-                        & " Name_And_Index Idx Not Present"
-                        & Name_And_Type_Index'Image);
+                     case Read_Tag is
+                        when FIELD_REFERENCE =>
+                           Incomplete_Map.Include
+                             (Constant_Pool_Position,
+                              Incomplete_Entry'
+                                (FIELD_REFERENCE,
+                                 Class_Index,
+                                 Name_And_Type_Index));
+
+                        when METHOD_REFERENCE =>
+                           Incomplete_Map.Include
+                             (Constant_Pool_Position,
+                              Incomplete_Entry'
+                                (METHOD_REFERENCE,
+                                 Class_Index,
+                                 Name_And_Type_Index));
+
+                        when INTERFACE_METHOD_REFERENCE =>
+                           Incomplete_Map.Include
+                             (Constant_Pool_Position,
+                              Incomplete_Entry'
+                                (INTERFACE_METHOD_REFERENCE,
+                                 Class_Index,
+                                 Name_And_Type_Index));
+
+                        when others =>
+                           raise Constraint_Error;
+                     end case;
                   end if;
                end;
 
