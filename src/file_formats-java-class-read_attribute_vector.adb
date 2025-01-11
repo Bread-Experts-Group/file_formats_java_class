@@ -1,5 +1,3 @@
-pragma Restrictions (No_Exception_Propagation);
-
 -----------------------
 -- Read_Field_Vector --
 -----------------------
