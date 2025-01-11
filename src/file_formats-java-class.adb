@@ -126,8 +126,6 @@ package body File_Formats.Java.Class is
       function u2_To_Class_Access_Flags is new
         Ada.Unchecked_Conversion (u2.Big_Endian, Class_File_Access_Flags);
    begin
-      pragma
-        Compile_Time_Warning (Standard.True, "Read_Class_File unfinished");
       Class_File_Magic'Read (Stream, Magic);
       u2.Big_Endian'Read (Stream, Minor_Version);
       u2.Big_Endian'Read (Stream, Major_Version);
