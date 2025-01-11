@@ -44,9 +44,12 @@ package body File_Formats.Java.Class is
      (Stream :     not null access Ada.Streams.Root_Stream_Type'Class;
       Item   : out Constant_Pool_Vectors.Vector)
    is
+    Constant_Pool_Count : u2.Big_Endian range 1 .. u2.Big_Endian'Last;
    begin
       pragma Compile_Time_Warning
-        (Standard.True, "Read_Constant_Pool_Vector unimplemented");
+        (Standard.True, "Read_Constant_Pool_Vector unfinished");
+      u2.Big_Endian'Read (Stream, Constant_Pool_Count);
+      Ada.Text_IO.Put_Line (Constant_Pool_Count'Image);
       raise Program_Error
         with "Unimplemented procedure Read_Constant_Pool_Vector";
    end Read_Constant_Pool_Vector;
