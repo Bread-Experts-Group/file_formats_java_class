@@ -95,33 +95,33 @@ package body File_Formats.Java.Class is
                   Bytes  : Standard.String (1 .. Standard.Integer (Length));
                begin
                   Standard.String'Read (Stream, Bytes);
-                  Item.Replace
+                  Item.Include
                     (Constant_Pool_Position,
                      Constant_Pool_Entry'(UTF_8, new Standard.String'(Bytes)));
                end;
 
             when INTEGER =>
-               Item.Replace
+               Item.Include
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (INTEGER,
                      Standard.Integer (i4.Big_Endian'Input (Stream))));
 
             when FLOAT =>
-               Item.Replace
+               Item.Include
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (FLOAT, u4_To_Float (u4.Big_Endian'Input (Stream))));
 
             when LONG =>
-               Item.Replace
+               Item.Include
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (LONG,
                      Standard.Long_Integer (i8.Big_Endian'Input (Stream))));
 
             when DOUBLE =>
-               Item.Replace
+               Item.Include
                  (Constant_Pool_Position,
                   Constant_Pool_Entry'
                     (DOUBLE, u8_To_Double (u8.Big_Endian'Input (Stream))));
