@@ -7,6 +7,7 @@ package File_Formats.Java.Class is
 
    package u4 renames Byteflippers.Endians_Unsigned_32;
    package u2 renames Byteflippers.Endians_Unsigned_16;
+   package i2 renames Byteflippers.Endians_Signed_16;
 
    ------------------------------
    -- Class File Constant Pool --
@@ -87,8 +88,10 @@ package File_Formats.Java.Class is
    for Constant_Pool_Entry'Input use Read_Constant_Pool_Entry;
    for Constant_Pool_Entry'Write use Write_Constant_Pool_Entry;
 
-   package Constant_Pool_Vectors is new
-      Ada.Containers.Indefinite_Vectors (Positive, Constant_Pool_Entry);
+   subtype Constant_Pool_Index is i2.Big_Endian range 1 .. i2.Big_Endian'Last;
+
+   package Constant_Pool_Vectors is new Ada.Containers.Indefinite_Vectors
+         (Constant_Pool_Index, Constant_Pool_Entry);
 
    procedure Read_Constant_Pool_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;

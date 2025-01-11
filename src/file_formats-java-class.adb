@@ -1,5 +1,5 @@
---  testing
 pragma Ada_2022;
+--  testing
 with Ada.Text_IO;
 --  testing end
 
@@ -44,12 +44,48 @@ package body File_Formats.Java.Class is
      (Stream :     not null access Ada.Streams.Root_Stream_Type'Class;
       Item   : out Constant_Pool_Vectors.Vector)
    is
-    Constant_Pool_Count : u2.Big_Endian range 1 .. u2.Big_Endian'Last;
+      Constant_Pool_Count, Constant_Pool_Position : Constant_Pool_Index;
+      Read_Tag : Constant_Pool_Entry_Tag;
+
+      type Incomplete_Entry (Tag : Constant_Pool_Entry_Tag) is record
+        case Tag is
+          when CLASS =>
+              Qualified_Name_Ref : Constant_Pool_Index;
+          when STRING =>
+              String_Ref : Constant_Pool_Index;
+          when FIELD_REFERENCE  |
+                METHOD_REFERENCE |
+                INTERFACE_METHOD_REFERENCE =>
+              Class_Ref         : Constant_Pool_Index;
+              Name_And_Type_Ref : Constant_Pool_Index;
+          when NAME_AND_TYPE =>
+              Name_Ref, Descriptor_Ref : Constant_Pool_Index;
+          when others =>
+              null;
+        end case;
+      end record;
+
+      use type i2.Big_Endian;
    begin
       pragma Compile_Time_Warning
         (Standard.True, "Read_Constant_Pool_Vector unfinished");
-      u2.Big_Endian'Read (Stream, Constant_Pool_Count);
-      Ada.Text_IO.Put_Line (Constant_Pool_Count'Image);
+      i2.Big_Endian'Read (Stream, Constant_Pool_Count);
+      Item.Set_Length (Ada.Containers.Count_Type (Constant_Pool_Count));
+      Constant_Pool_Position := 1;
+      loop
+        Constant_Pool_Entry_Tag'Read (Stream, Read_Tag);
+        case Read_Tag is
+          when FlOAT =>
+            Item.Replace_Element
+              (Constant_Pool_Position,
+               Constant_Pool_Entry'(FLOAT, Standard.Float'Input (Stream)));
+          when others =>
+            raise Program_Error with "Unimplemented tag " & Read_Tag'Image;
+        end case;
+
+        Constant_Pool_Position := @ + 1;
+        exit when Constant_Pool_Position = Constant_Pool_Count;
+      end loop;
       raise Program_Error
         with "Unimplemented procedure Read_Constant_Pool_Vector";
    end Read_Constant_Pool_Vector;
