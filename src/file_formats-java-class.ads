@@ -90,17 +90,6 @@ package File_Formats.Java.Class is
       end case;
    end record;
 
-   function Read_Constant_Pool_Entry
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-      return Constant_Pool_Entry;
-
-   procedure Write_Constant_Pool_Entry
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : Constant_Pool_Entry);
-
-   for Constant_Pool_Entry'Input use Read_Constant_Pool_Entry;
-   for Constant_Pool_Entry'Write use Write_Constant_Pool_Entry;
-
    subtype Constant_Pool_Index is i2.Big_Endian range 1 .. i2.Big_Endian'Last;
    use type i2.Big_Endian;
 
@@ -172,17 +161,6 @@ package File_Formats.Java.Class is
       Name_Ref : Utf_8_Constant_Pool_Entry_Access;
    end record;
 
-   function Read_Class_File_Attribute
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-      return Class_File_Attribute;
-
-   procedure Write_Class_File_Attribute
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : Class_File_Attribute);
-
-   for Class_File_Attribute'Input use Read_Class_File_Attribute;
-   for Class_File_Attribute'Write use Write_Class_File_Attribute;
-
    package Attribute_Vectors is new
      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Attribute);
 
@@ -237,17 +215,6 @@ package File_Formats.Java.Class is
             Access_Flags_Others : Class_File_Field_Access_Flags_Any;
       end case;
    end record;
-
-   function Read_Class_File_Field
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-      return Class_File_Field;
-
-   procedure Write_Class_File_Field
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : Class_File_Field);
-
-   for Class_File_Field'Input use Read_Class_File_Field;
-   for Class_File_Field'Write use Write_Class_File_Field;
 
    package Field_Vectors is new
      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Field);
@@ -308,17 +275,6 @@ package File_Formats.Java.Class is
             Access_Flags_Others : Class_File_Method_Access_Flags_Any;
       end case;
    end record;
-
-   function Read_Class_File_Method
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
-      return Class_File_Method;
-
-   procedure Write_Class_File_Method
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : Class_File_Method);
-
-   for Class_File_Method'Input use Read_Class_File_Method;
-   for Class_File_Method'Write use Write_Class_File_Method;
 
    package Method_Vectors is new
      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Method);
