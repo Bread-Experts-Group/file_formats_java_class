@@ -249,11 +249,14 @@ package body File_Formats.Java.Class is
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class)
       return Class_File
    is
-      Magic         : Class_File_Magic;
-      Minor_Version : u2.Big_Endian;
-      Major_Version : u2.Big_Endian;
-      Constant_Pool : Constant_Pool_Maps.Map;
-      Access_Flags  : Class_File_Access_Flags;
+      Magic           : Class_File_Magic;
+      Minor_Version   : u2.Big_Endian;
+      Major_Version   : u2.Big_Endian;
+      Constant_Pool   : Constant_Pool_Maps.Map;
+      Access_Flags    : Class_File_Access_Flags;
+      This_Class_Idx  : Constant_Pool_Index;
+      Super_Class_Idx : Constant_Pool_Index;
+      Interfaces      : Interface_Vectors.Vector;
       
       function u2_To_Class_Access_Flags is new Ada.Unchecked_Conversion (u2.Big_Endian, Class_File_Access_Flags);
    begin
@@ -264,12 +267,22 @@ package body File_Formats.Java.Class is
       u2.Big_Endian'Read (Stream, Major_Version);
       Read_Constant_Pool_Map (Stream, Constant_Pool);
       Access_Flags := u2_To_Class_Access_Flags (u2.Big_Endian'Input (Stream));
+      u2.Big_Endian'Read (Stream, This_Class_Idx);
+      u2.Big_Endian'Read (Stream, Super_Class_Idx);
 
-      Ada.Text_IO.Put_Line (Magic'Image);
-      Ada.Text_IO.Put_Line (Major_Version'Image);
-      Ada.Text_IO.Put_Line (Minor_Version'Image);
-      Ada.Text_IO.Put_Line (Constant_Pool'Image);
-      Ada.Text_IO.Put_Line (Access_Flags'Image);
+      Ada.Text_IO.Put_Line ("Magic        :" & Magic'Image);
+      Ada.Text_IO.Put_Line ("Major V#     :" & Major_Version'Image);
+      Ada.Text_IO.Put_Line ("Minor V#     :" & Minor_Version'Image);
+      Ada.Text_IO.Put_Line ("Constant Pool:" & Constant_Pool'Image);
+      Ada.Text_IO.Put_Line ("Access       :" & Access_Flags'Image);
+      Ada.Text_IO.Put_Line ("This  #      :" & This_Class_Idx'Image);
+      Ada.Text_IO.Put_Line ("Super #      :" & Super_Class_Idx'Image);
+      declare
+        Interfaces_Count : u2.Big_Endian;
+      begin
+        u2.Big_Endian'Read (Stream, Major_Version);
+        Ada.Text_IO.Put_Line ("Interfaces # :" & Interfaces_Count'Image);
+      end;
       return
         raise Program_Error with "Unimplemented procedure Read_Class_File";
    end Read_Class_File;
