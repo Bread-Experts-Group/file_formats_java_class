@@ -267,8 +267,8 @@ package body File_Formats.Java.Class is
       u2.Big_Endian'Read (Stream, Major_Version);
       Read_Constant_Pool_Map (Stream, Constant_Pool);
       Access_Flags := u2_To_Class_Access_Flags (u2.Big_Endian'Input (Stream));
-      u2.Big_Endian'Read (Stream, This_Class_Idx);
-      u2.Big_Endian'Read (Stream, Super_Class_Idx);
+      Constant_Pool_Index'Read (Stream, This_Class_Idx);
+      Constant_Pool_Index'Read (Stream, Super_Class_Idx);
 
       Ada.Text_IO.Put_Line ("Magic        :" & Magic'Image);
       Ada.Text_IO.Put_Line ("Major V#     :" & Major_Version'Image);
