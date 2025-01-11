@@ -212,6 +212,7 @@ package body File_Formats.Java.Class is
                                    (FIELD_REFERENCE,
                                     new Class_Constant_Pool_Entry'(Class),
 
+
                                       new Name_And_Type_Constant_Pool_Entry'
                                         (Name_And_Type)));
 
@@ -222,6 +223,7 @@ package body File_Formats.Java.Class is
                                    (METHOD_REFERENCE,
                                     new Class_Constant_Pool_Entry'(Class),
 
+
                                       new Name_And_Type_Constant_Pool_Entry'
                                         (Name_And_Type)));
 
@@ -231,6 +233,7 @@ package body File_Formats.Java.Class is
                                  Constant_Pool_Entry'
                                    (INTERFACE_METHOD_REFERENCE,
                                     new Class_Constant_Pool_Entry'(Class),
+
 
                                       new Name_And_Type_Constant_Pool_Entry'
                                         (Name_And_Type)));
@@ -278,32 +281,30 @@ package body File_Formats.Java.Class is
                   Descriptor_Index : Constant_Pool_Index :=
                     Constant_Pool_Index'Input (Stream);
                begin
-                  if Item.Contains (Name_Index) then
-                     Ada.Text_IO.Put_Line
-                       (Read_Tag'Image
-                        & " Name Idx Present?"
-                        & Name_Index'Image
-                        & ' '
-                        & Item.Element (Name_Index)'Image);
-                  else
-                     Ada.Text_IO.Put_Line
-                       (Read_Tag'Image
-                        & " Name Idx Not Present"
-                        & Name_Index'Image);
-                  end if;
+                  if Item.Contains (Name_Index)
+                    and then Item.Contains (Descriptor_Index)
+                  then
+                     declare
+                        Name       : Utf_8_Constant_Pool_Entry :=
+                          Utf_8_Constant_Pool_Entry
+                            (Item.Element (Name_Index));
+                        Descriptor : Utf_8_Constant_Pool_Entry :=
+                          Utf_8_Constant_Pool_Entry
+                            (Item.Element (Descriptor_Index));
+                     begin
+                        Item.Include
+                          (Constant_Pool_Position,
+                           Constant_Pool_Entry'
+                             (NAME_AND_TYPE,
+                              new Utf_8_Constant_Pool_Entry'(Name),
 
-                  if Item.Contains (Descriptor_Index) then
-                     Ada.Text_IO.Put_Line
-                       (Read_Tag'Image
-                        & " Descriptor Idx Present?"
-                        & Descriptor_Index'Image
-                        & ' '
-                        & Item.Element (Descriptor_Index)'Image);
+                              new Utf_8_Constant_Pool_Entry'(Descriptor)));
+                     end;
                   else
-                     Ada.Text_IO.Put_Line
-                       (Read_Tag'Image
-                        & " Descriptor Idx Not Present"
-                        & Descriptor_Index'Image);
+                     Incomplete_Map.Include
+                       (Constant_Pool_Position,
+                        Incomplete_Entry'
+                          (NAME_AND_TYPE, Name_Index, Descriptor_Index));
                   end if;
                end;
          end case;
