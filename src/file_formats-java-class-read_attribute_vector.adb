@@ -1,6 +1,6 @@
------------------------
--- Read_Field_Vector --
------------------------
+---------------------------
+-- Read_Attribute_Vector --
+---------------------------
 
 separate (File_Formats.Java.Class)
 procedure Read_Attribute_Vector
@@ -12,12 +12,13 @@ is
 begin
    for Index in 1 .. u2.Big_Endian'Input (Stream) loop
       declare
-         Name : Utf_8_Constant_Pool_Entry := Utf_8_Constant_Pool_Entry
-            (Pool.Element (i2.Big_Endian'Input (Stream)));
+         Name : Utf_8_Constant_Pool_Entry :=
+           Utf_8_Constant_Pool_Entry
+             (Pool.Element (i2.Big_Endian'Input (Stream)));
       begin
          begin
             Attribute_Type :=
-            Class_File_Attribute_Type'Value (Name.Utf_Bytes.all);
+              Class_File_Attribute_Type'Value (Name.Utf_Bytes.all);
          exception
             when others =>
                Attribute_Type := Other;
@@ -29,8 +30,8 @@ begin
                begin
                   Raw_Data'Read (Stream, Data);
                   Item.Append
-                  (Class_File_Attribute'
-                     (Attribute_Type => Attribute_Type,
+                    (Class_File_Attribute'
+                       (Attribute_Type => Attribute_Type,
                         Name_Ref       => Name,
                         Data           => new Raw_Data'(Data)));
                end;

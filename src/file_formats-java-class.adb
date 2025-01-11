@@ -87,14 +87,11 @@ package body File_Formats.Java.Class is
    ------------------------
 
    procedure Read_Method_Vector
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Method_Vectors.Vector) is
-   begin
-      pragma
-        Compile_Time_Warning
-          (Standard.True, "Read_Method_Vector unimplemented");
-      raise Program_Error with "Unimplemented procedure Read_Method_Vector";
-   end Read_Method_Vector;
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item        : out Method_Vectors.Vector;
+      Pool        : Constant_Pool_Maps.Map;
+      Environment : Class_File_Environment)
+   is separate;
 
    -------------------------
    -- Write_Method_Vector --
@@ -127,6 +124,8 @@ package body File_Formats.Java.Class is
       Super_Class_Idx : Constant_Pool_Index;
       Interfaces      : Interface_Vectors.Vector;
       Fields          : Field_Vectors.Vector;
+      Methods         : Method_Vectors.Vector;
+      Attributes    : Attribute_Vectors.Vector;
 
       function u2_To_Class_Access_Flags is new
         Ada.Unchecked_Conversion (u2.Big_Endian, Class_File_Access_Flags);
@@ -155,6 +154,12 @@ package body File_Formats.Java.Class is
          Fields,
          Constant_Pool,
          (if Access_Flags.IS_INTERFACE then IS_INTERFACE else CLASS));
+      Read_Method_Vector
+        (Stream,
+         Methods,
+         Constant_Pool,
+         (if Access_Flags.IS_INTERFACE then IS_INTERFACE else CLASS));
+      Read_Attribute_Vector (Stream, Attributes, Constant_Pool);
 
       Ada.Text_IO.Put_Line ("Magic        :" & Magic'Image);
       Ada.Text_IO.Put_Line ("Major V#     :" & Major_Version'Image);
@@ -165,6 +170,8 @@ package body File_Formats.Java.Class is
       Ada.Text_IO.Put_Line ("Super #      :" & Super_Class_Idx'Image);
       Ada.Text_IO.Put_Line ("Interfaces   :" & Interfaces'Image);
       Ada.Text_IO.Put_Line ("Fields       :" & Fields'Image);
+      Ada.Text_IO.Put_Line ("Methods      :" & Methods'Image);
+      Ada.Text_IO.Put_Line ("Attributes   :" & Attributes'Image);
       return
         raise Program_Error with "Unimplemented procedure Read_Class_File";
    end Read_Class_File;

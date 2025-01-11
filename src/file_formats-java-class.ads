@@ -297,8 +297,10 @@ package File_Formats.Java.Class is
      Ada.Containers.Indefinite_Vectors (Positive, Class_File_Method);
 
    procedure Read_Method_Vector
-     (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
-      Item   : out Method_Vectors.Vector);
+     (Stream      : not null access Ada.Streams.Root_Stream_Type'Class;
+      Item        : out Method_Vectors.Vector;
+      Pool        : Constant_Pool_Maps.Map;
+      Environment : Class_File_Environment);
 
    procedure Write_Method_Vector
      (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
