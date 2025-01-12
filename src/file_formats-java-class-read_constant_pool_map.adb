@@ -143,7 +143,6 @@ is
    end Handle_Incomplete_Entry;
 begin
    i2.Big_Endian'Read (Stream, Constant_Pool_Count);
-   Constant_Pool_Count := @ - 1;
    Constant_Pool_Position := 1;
    loop
       Constant_Pool_Entry_Tag'Read (Stream, Read_Tag);
@@ -357,6 +356,7 @@ begin
       Constant_Pool_Position := @ + 1;
       exit when Constant_Pool_Position >= Constant_Pool_Index (Incomplete_Map.Length);
    end loop;
+   Constant_Pool_Count := @ - 1;
    if Constant_Pool_Count /= Constant_Pool_Index (Item.Last_Key) then
       raise Constraint_Error with "Constant Pool has incorrect size (" & Item.Length'Image & " /" & Item.Last_Key'Image & " /" & Constant_Pool_Count'Image & " )";
    end if;
