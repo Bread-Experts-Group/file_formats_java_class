@@ -80,7 +80,7 @@ package File_Formats.Java.Class is
             Float_Bytes : Standard.Float;
 
          when LONG =>
-            Long_Bytes : Standard.Long_Integer;
+            Long_Bytes : i8.Big_Endian;
 
          when DOUBLE =>
             Double_Bytes : Standard.Long_Float;
