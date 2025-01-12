@@ -140,6 +140,7 @@ is
                raise Constraint_Error;
          end case;
          Incomplete_Map.Delete (Index);
+         Ada.Text_IO.Put_Line (Incomplete_Map.Length'Image);
       end;
    end Handle_Incomplete_Entry;
 begin
