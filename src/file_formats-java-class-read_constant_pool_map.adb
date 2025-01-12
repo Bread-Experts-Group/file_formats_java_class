@@ -1,6 +1,7 @@
 pragma Ada_2022;
 pragma Extensions_Allowed (On);
 
+with Ada.Text_IO;
 with Ada.Unchecked_Conversion;
 
 ----------------------------
@@ -170,12 +171,17 @@ begin
                Constant_Pool_Entry'
                  (FLOAT, u4_To_Float (u4.Big_Endian'Input (Stream))));
 
-         when LONG =>
+         when LONG => declare
+            Exp : i8.Big_Endian;
+         begin
+            Exp := i8.Big_Endian'Input (Stream);
+            Ada.Text_IO.Put_Line (Exp'Image);
             Item.Include
               (Constant_Pool_Position,
                Constant_Pool_Entry'
-                 (LONG, Standard.Long_Integer (i8.Big_Endian'Input (Stream))));
+                 (LONG, Standard.Long_Integer (Exp)));
             Constant_Pool_Position := @ + 1;
+         end;
 
          when DOUBLE =>
             Item.Include
