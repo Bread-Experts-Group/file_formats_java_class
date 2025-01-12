@@ -171,17 +171,12 @@ begin
                Constant_Pool_Entry'
                  (FLOAT, u4_To_Float (u4.Big_Endian'Input (Stream))));
 
-         when LONG => declare
-            Exp : i8.Big_Endian;
-         begin
-            Exp := i8.Big_Endian'Input (Stream);
-            Ada.Text_IO.Put_Line ("A" & Exp'Image);
+         when LONG =>
             Item.Include
               (Constant_Pool_Position,
                Constant_Pool_Entry'
-                 (LONG, Exp));
+                 (LONG, i8.Big_Endian'Input (Stream)));
             Constant_Pool_Position := @ + 1;
-         end;
 
          when DOUBLE =>
             Item.Include
