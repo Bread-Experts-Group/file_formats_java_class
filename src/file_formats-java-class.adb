@@ -117,7 +117,7 @@ package body File_Formats.Java.Class is
       Constant_Pool   : Constant_Pool_Maps.Map;
       Access_Flags    : Class_File_Access_Flags;
       This_Class_Idx  : Constant_Pool_Index;
-      Super_Class_Idx : Constant_Pool_Index;
+      Super_Class_Idx : u2.Big_Endian;
       Interfaces      : Interface_Vectors.Vector;
       Fields          : Field_Vectors.Vector;
       Methods         : Method_Vectors.Vector;
