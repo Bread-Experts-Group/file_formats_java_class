@@ -141,9 +141,10 @@ package body File_Formats.Java.Class is
          Interfaces_Count : i2.Big_Endian;
       begin
          i2.Big_Endian'Read (Stream, Interfaces_Count);
+         Interfaces.Set_Length (Interfaces_Count);
          for Index in 1 .. Interfaces_Count loop
-            Interfaces.Append
-              (Class_Constant_Pool_Entry (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))));
+            Interfaces.Replace_Element
+              (Index, Class_Constant_Pool_Entry (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))));
          end loop;
       end;
       Read_Field_Vector
