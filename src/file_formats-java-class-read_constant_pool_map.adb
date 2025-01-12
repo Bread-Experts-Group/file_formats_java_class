@@ -143,7 +143,6 @@ is
    end Handle_Incomplete_Entry;
 begin
    i2.Big_Endian'Read (Stream, Constant_Pool_Count);
-   Constant_Pool_Count := @ - 1;
    Constant_Pool_Position := 1;
    loop
       Constant_Pool_Entry_Tag'Read (Stream, Read_Tag);
