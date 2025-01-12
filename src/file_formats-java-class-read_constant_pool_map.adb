@@ -348,14 +348,13 @@ begin
       end case;
 
       Constant_Pool_Position := @ + 1;
-      exit when Constant_Pool_Position = Constant_Pool_Count;
+      exit when Constant_Pool_Position >= Constant_Pool_Count;
    end loop;
    Constant_Pool_Position := 1;
-   Constant_Pool_Count := Constant_Pool_Index (Incomplete_Map.Length);
    loop
       Handle_Incomplete_Entry (Constant_Pool_Position);
       Constant_Pool_Position := @ + 1;
-      exit when Constant_Pool_Position = Constant_Pool_Count;
+      exit when Constant_Pool_Position >= Constant_Pool_Index (Incomplete_Map.Length);
    end loop;
    if Constant_Pool_Count /= Constant_Pool_Index (Item.Last_Key) then
       raise Constraint_Error with "Constant Pool has incorrect size (" & Item.Length'Image & " /" & Item.Last_Key'Image & " /" & Constant_Pool_Count'Image & " )";
