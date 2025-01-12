@@ -145,6 +145,10 @@ package File_Formats.Java.Class is
        IS_ABSTRACT at 1 range 2 .. 2;
      end record;
 
+   --  NOTE: .Vectors would be preferred here, however it causes an access
+   --        error (probably due to the empty class spaces being filled,
+   --        and due to the class entry specification requiring a not null
+   --        access... yeah.)
    package Interface_Vectors is new
      Ada.Containers.Indefinite_Vectors
        (Positive,
