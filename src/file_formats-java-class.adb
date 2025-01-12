@@ -1,5 +1,6 @@
 pragma Ada_2022;
 
+with Ada.Text_IO;
 with Ada.Unchecked_Conversion;
 
 package body File_Formats.Java.Class is
@@ -139,8 +140,9 @@ package body File_Formats.Java.Class is
       declare
          Interfaces_Count : i2.Big_Endian;
       begin
-         i2.Big_Endian'Read (Stream, Interfaces_Count);
+         u2.Big_Endian'Read (Stream, Interfaces_Count);
          for Index in 1 .. Interfaces_Count loop
+            Ada.Text_IO.Put_Line (f"{Index}/{Interfaces_Count}");
             Interfaces.Append
               (Class_Constant_Pool_Entry (Constant_Pool.Element (Index)));
          end loop;
