@@ -134,8 +134,6 @@ is
          when others =>
             raise Constraint_Error;
       end case;
-      Incomplete_Map.Delete (Index);
-      Ada.Text_IO.Put_Line (Incomplete_Map.Length'Image);
    end Handle_Incomplete_Entry;
 begin
    i2.Big_Endian'Read (Stream, Constant_Pool_Count);
@@ -350,6 +348,7 @@ begin
    for Incomplete_Entry in Incomplete_Map.Iterate loop
       Handle_Incomplete_Entry (Incomplete_Entry.Key);
    end loop;
+   Incomplete_Map.Clear;
 
    declare
       use type Ada.Containers.Count_Type;
