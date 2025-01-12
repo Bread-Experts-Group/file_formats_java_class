@@ -142,7 +142,7 @@ package body File_Formats.Java.Class is
       begin
          u2.Big_Endian'Read (Stream, Interfaces_Count);
          for Index in 1 .. Interfaces_Count loop
-            Ada.Text_IO.Put_Line (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))'Image);
+            Ada.Text_IO.Put_Line (Class_Constant_Pool_Entry (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))).Qualified_Name_Ref.Utf_Bytes.all'Image);
          end loop;
       end;
       Read_Field_Vector
