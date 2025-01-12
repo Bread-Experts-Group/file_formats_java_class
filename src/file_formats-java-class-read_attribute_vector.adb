@@ -34,14 +34,19 @@ begin
                        Utf_8_Constant_Pool_Entry
                          (Pool.Element (Constant_Pool_Index'Input (Stream)))));
 
-            when ConstantValue =>
+            when ConstantValue => declare
+               CV : Constant_Pool_Index'Input (Stream);
+            begin
+               Ada.Text_IO.Put_Line (CV'Image);
+               Ada.Text_IO.Put_Line (Pool'Image);
                Item.Append
                  (Class_File_Attribute'
                     (Attribute_Type => ConstantValue,
                      Name_Ref       => Name,
                      Constant_Value =>
                        new Constant_Pool_Entry'
-                         (Pool.Element (Constant_Pool_Index'Input (Stream)))));
+                         (Pool.Element (CV))));
+            end;
 
             when Code =>
                declare
