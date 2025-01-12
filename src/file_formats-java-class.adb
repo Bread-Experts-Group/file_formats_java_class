@@ -157,8 +157,10 @@ package body File_Formats.Java.Class is
          (if Access_Flags.IS_INTERFACE then IS_INTERFACE else CLASS));
       Read_Attribute_Vector (Stream, Attributes, Constant_Pool);
 
-      Ada.Text_IO.Put_Line (This_Class_Idx'Image & ' ' & Constant_Pool.Contains (This_Class_Idx)'Image);
-      Ada.Text_IO.Put_Line (Super_Class_Idx'Image & ' ' & Constant_Pool.Contains (This_Class_Idx)'Image);
+      if not Constant_Pool.Contains (This_Class_Idx) then
+         Ada.Text_IO.Put_Line (This_Class_Idx'Image & ' ' & Constant_Pool'Image);
+         raise Program_Error with "This_Class is missing";
+      end if;
 
       return
         (Magic,
