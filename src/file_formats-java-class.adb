@@ -144,7 +144,7 @@ package body File_Formats.Java.Class is
          Interfaces.Set_Length (Ada.Containers.Count_Type (Interfaces_Count));
          for Index in 1 .. Interfaces_Count loop
             Interfaces.Replace_Element
-              (Index, Class_Constant_Pool_Entry (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))));
+              (Interfaces.To_Cursor (Interface_Vectors.Extended_Index (Index)), Class_Constant_Pool_Entry (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))));
          end loop;
       end;
       Read_Field_Vector
