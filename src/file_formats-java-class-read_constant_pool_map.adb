@@ -361,8 +361,8 @@ begin
    declare
       use type Ada.Containers.Count_Type;
    begin
-      if Incomplete_Map.Length > 0 then
-         raise Program_Error with "Incomplete map still has" & Incomplete_Map.Length'Image & " entries";
+      if not Incomplete_Map.Is_Empty then
+         raise Program_Error with "Incomplete map still has entries (" & Incomplete_Map.Length'Image & " /" & Incomplete_Map.Last_Key'Image & " )";
       end if;
    end;
    if Constant_Pool_Count /= Constant_Pool_Index (Item.Last_Key) then
