@@ -163,7 +163,7 @@ package body File_Formats.Java.Class is
            new Class_Constant_Pool_Entry'
              (Class_Constant_Pool_Entry
                 (Constant_Pool.Element (This_Class_Idx))),
-           (if Constant_Pool.Contains (Super_Class_Idx)
+           (if Super_Class_Idx > 0
             then
               new Class_Constant_Pool_Entry'
                 (Class_Constant_Pool_Entry
