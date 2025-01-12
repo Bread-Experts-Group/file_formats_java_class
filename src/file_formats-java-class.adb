@@ -141,9 +141,8 @@ package body File_Formats.Java.Class is
          Interfaces_Count : u2.Big_Endian;
       begin
          u2.Big_Endian'Read (Stream, Interfaces_Count);
-         Ada.Text_IO.Put_Line (Interfaces_Count'Image);
          for Index in 1 .. Interfaces_Count loop
-            Ada.Text_IO.Put_Line (Constant_Pool_Index'Input (Stream)'Image);
+            Ada.Text_IO.Put_Line (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))'Image);
          end loop;
       end;
       Read_Field_Vector
