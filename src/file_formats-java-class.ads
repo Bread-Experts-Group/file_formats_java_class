@@ -146,7 +146,7 @@ package File_Formats.Java.Class is
      end record;
 
    package Interface_Vectors is new
-     Ada.Containers.Vectors
+     Ada.Containers.Indefinite_Vectors
        (Positive,
         Class_Constant_Pool_Entry);
 
