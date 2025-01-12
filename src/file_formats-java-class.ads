@@ -52,10 +52,13 @@ package File_Formats.Java.Class is
 
    type Class_Utf_8_String_Access is not null access Class_Utf_8_String;
 
+   type Constant_Pool_Entry;
    type Class_Constant_Pool_Entry;
    type Utf_8_Constant_Pool_Entry;
    type Name_And_Type_Constant_Pool_Entry;
 
+   type Constant_Pool_Entry_Access is
+     not null access Constant_Pool_Entry;
    type Utf_8_Constant_Pool_Entry_Access is
      not null access Utf_8_Constant_Pool_Entry;
    type Class_Constant_Pool_Entry_Access is
@@ -196,6 +199,9 @@ package File_Formats.Java.Class is
       case Attribute_Type is
          when SourceFile =>
             Source_File : Utf_8_Constant_Pool_Entry;
+
+         when ConstantValue =>
+            Constant_Value : Constant_Pool_Entry_Access;
 
          when Code =>
             Max_Stack_Size       : u2.Big_Endian;

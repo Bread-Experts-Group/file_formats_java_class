@@ -34,6 +34,15 @@ begin
                        Utf_8_Constant_Pool_Entry
                          (Pool.Element (Constant_Pool_Index'Input (Stream)))));
 
+            when ConstantValue =>
+               Item.Append
+                 (Class_File_Attribute'
+                    (Attribute_Type => ConstantValue,
+                     Name_Ref       => Name,
+                     Constant_Value =>
+                       new Constant_Pool_Entry'
+                         (Pool.Element (Constant_Pool_Index'Input (Stream)))));
+
             when Code =>
                declare
                   Max_Stack_Size       : constant u2.Big_Endian :=
