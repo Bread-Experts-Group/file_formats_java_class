@@ -350,13 +350,6 @@ begin
    end loop;
    Incomplete_Map.Clear;
 
-   declare
-      use type Ada.Containers.Count_Type;
-   begin
-      if not Incomplete_Map.Is_Empty then
-         raise Program_Error with "Incomplete map still has entries (" & Incomplete_Map.Length'Image & " /" & Incomplete_Map.Last_Key'Image & " )";
-      end if;
-   end;
    if (Constant_Pool_Count - 1) /= Constant_Pool_Index (Item.Last_Key) then
       raise Program_Error with "Constant Pool has incorrect size (" & Item.Length'Image & " /" & Item.Last_Key'Image & " /" & Constant_Pool_Index'(Constant_Pool_Count - 1)'Image & " )";
    end if;
