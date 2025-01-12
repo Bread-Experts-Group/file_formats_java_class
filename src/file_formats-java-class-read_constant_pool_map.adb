@@ -1,7 +1,6 @@
 pragma Ada_2022;
 pragma Extensions_Allowed (On);
 
-with Ada.Text_IO;
 with Ada.Unchecked_Conversion;
 
 ----------------------------
@@ -358,4 +357,7 @@ begin
       Constant_Pool_Position := @ + 1;
       exit when Constant_Pool_Position = Constant_Pool_Count;
    end loop;
+   if Constant_Pool_Count /= Item.Length then
+      raise Constraint_Error with "Constant Pool has incorrect size (" & Item.Length & " /" & Constant_Pool_Count'Image & " )";
+   end if;
 end Read_Constant_Pool_Map;
