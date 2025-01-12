@@ -175,7 +175,8 @@ begin
             Exp : i8.Big_Endian;
          begin
             Exp := i8.Big_Endian'Input (Stream);
-            Ada.Text_IO.Put_Line (Exp'Image);
+            Ada.Text_IO.Put_Line ("A" & Exp'Image);
+            Ada.Text_IO.Put_Line ("B" & Standard.Long_Integer (Exp)'Image);
             Item.Include
               (Constant_Pool_Position,
                Constant_Pool_Entry'
