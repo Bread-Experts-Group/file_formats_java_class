@@ -142,7 +142,7 @@ package body File_Formats.Java.Class is
       begin
          i2.Big_Endian'Read (Stream, Interfaces_Count);
          for Index in 1 .. Interfaces_Count loop
-            Ada.Text_IO.Put_Line (Index'Image & '/' & Interfaces_Count'Image);
+            Ada.Text_IO.Put_Line (Index'Image & '/' & Interfaces_Count'Image & Constant_Pool.Element (Index)'Image);
             Interfaces.Append
               (Class_Constant_Pool_Entry (Constant_Pool.Element (Index)));
          end loop;
