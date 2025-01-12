@@ -132,7 +132,7 @@ package body File_Formats.Java.Class is
       Read_Constant_Pool_Map (Stream, Constant_Pool);
       Access_Flags := u2_To_Class_Access_Flags (u2.Big_Endian'Input (Stream));
       Constant_Pool_Index'Read (Stream, This_Class_Idx);
-      Constant_Pool_Index'Read (Stream, Super_Class_Idx);
+      u2.Big_Endian'Read (Stream, Super_Class_Idx);
       declare
          Interfaces_Count : i2.Big_Endian;
       begin
@@ -167,7 +167,7 @@ package body File_Formats.Java.Class is
             then
               new Class_Constant_Pool_Entry'
                 (Class_Constant_Pool_Entry
-                   (Constant_Pool.Element (Super_Class_Idx)))
+                   (Constant_Pool.Element (Constant_Pool_Index (Super_Class_Idx))))
             else null),
          Interfaces,
          Fields,
