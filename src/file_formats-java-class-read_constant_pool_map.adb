@@ -12,6 +12,7 @@ procedure Read_Constant_Pool_Map
   (Stream : not null access Ada.Streams.Root_Stream_Type'Class;
    Item   : out Constant_Pool_Maps.Map)
 is
+   use type Ada.Containers.Count_Type;
    Constant_Pool_Count, Constant_Pool_Position : Constant_Pool_Index;
    Read_Tag                                    : Constant_Pool_Entry_Tag;
 
@@ -358,6 +359,6 @@ begin
       exit when Constant_Pool_Position = Constant_Pool_Count;
    end loop;
    if Constant_Pool_Count /= Item.Length then
-      raise Constraint_Error with "Constant Pool has incorrect size (" & Item.Length & " /" & Constant_Pool_Count'Image & " )";
+      raise Constraint_Error with "Constant Pool has incorrect size (" & Item.Length'Image & " /" & Constant_Pool_Count'Image & " )";
    end if;
 end Read_Constant_Pool_Map;
