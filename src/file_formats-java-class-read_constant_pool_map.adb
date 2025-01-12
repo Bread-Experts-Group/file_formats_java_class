@@ -139,6 +139,7 @@ is
             when others =>
                raise Constraint_Error;
          end case;
+         Incomplete_Map.Delete (Index);
       end;
    end Handle_Incomplete_Entry;
 begin
@@ -357,7 +358,14 @@ begin
       exit when Constant_Pool_Position >= Constant_Pool_Index (Incomplete_Map.Length);
    end loop;
    Constant_Pool_Count := @ - 1;
+   declare
+      use type Ada.Containers.Count_Type;
+   begin
+      if Incomplete_Map.Length > 0 then
+         raise Program_Error with "Incomplete map still has entries";
+      end if;
+   end;
    if Constant_Pool_Count /= Constant_Pool_Index (Item.Last_Key) then
-      raise Constraint_Error with "Constant Pool has incorrect size (" & Item.Length'Image & " /" & Item.Last_Key'Image & " /" & Constant_Pool_Count'Image & " )";
+      raise Program_Error with "Constant Pool has incorrect size (" & Item.Length'Image & " /" & Item.Last_Key'Image & " /" & Constant_Pool_Count'Image & " )";
    end if;
 end Read_Constant_Pool_Map;
