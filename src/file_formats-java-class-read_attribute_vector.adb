@@ -35,7 +35,7 @@ begin
                          (Pool.Element (Constant_Pool_Index'Input (Stream)))));
 
             when ConstantValue => declare
-               CV : Constant_Pool_Index'Input (Stream);
+               CV : Constant_Pool_Index :=  Constant_Pool_Index'Input (Stream);
             begin
                Ada.Text_IO.Put_Line (CV'Image);
                Ada.Text_IO.Put_Line (Pool'Image);
