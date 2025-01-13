@@ -51,8 +51,9 @@ is
 
    procedure Handle_Incomplete_Entry (Index : Constant_Pool_Index) is
    begin
+      Ada.Text_IO.Put_Line (Index'Image);
       if not Incomplete_Map.Contains (Index) then
-         raise Constraint_Error with "Possible misalignment." & "No incomplete entry for index" & Index'Image & " incomplete map: (" & Incomplete_Map.Length'Image & " /" & Incomplete_Map.Last_Key'Image & " )";
+         raise Constraint_Error with "Possible misalignment. " & "No incomplete entry for index" & Index'Image & " incomplete map: (" & Incomplete_Map.Length'Image & " /" & Incomplete_Map.Last_Key'Image & " )";
       end if;
 
       declare
