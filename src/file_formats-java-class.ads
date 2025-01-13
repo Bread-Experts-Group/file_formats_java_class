@@ -161,16 +161,23 @@ package File_Formats.Java.Class is
    ---------------------------
 
    type Class_File_Attribute_Type is
-     (SourceFile,
-      ConstantValue,
+     (ConstantValue,
       Code,
       Exceptions,
+      InnerClasses,
+      Synthetic,
+      SourceFile,
       LineNumberTable,
       LocalVariableTable,
+      Deprecated,
       Other);
 
    type Raw_Data is array (u4.Big_Endian range <>) of Byteflippers.Unsigned_8;
    type Raw_Data_Access is not null access Raw_Data;
+
+   type Positive_u4 is new u4.Big_Endian range 1 .. u4.Big_Endian'Last;
+   type Raw_Data_Filled is array (Positive_u4 range <>) of Byteflippers.Unsigned_8;
+   type Raw_Data_Filled_Access is not null access Raw_Data_Filled;
 
    type CFA_Code_Exception_Entry is record
       Program_Counter_Start   : u2.Big_Endian;
@@ -210,7 +217,7 @@ package File_Formats.Java.Class is
          when Code =>
             Max_Stack_Size       : u2.Big_Endian;
             Local_Variable_Count : u2.Big_Endian;
-            Code                 : Raw_Data_Access;
+            Code                 : Raw_Data_Filled_Access;
             Exception_Table      : CFA_Code_Exception_Vectors.Vector;
             Attributes           : Attribute_Vector_Access;
          

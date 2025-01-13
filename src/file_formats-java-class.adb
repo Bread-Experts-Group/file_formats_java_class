@@ -130,7 +130,7 @@ package body File_Formats.Java.Class is
       Class_File_Magic'Read (Stream, Magic);
       u2.Big_Endian'Read (Stream, Minor_Version);
       u2.Big_Endian'Read (Stream, Major_Version);
-      if Major_Version > 45 then
+      if Major_Version > 50 then
          raise Constraint_Error with "Class file major version" & Major_Version'Image & " is too high, max supported is 45";
       end if;
       Read_Constant_Pool_Map (Stream, Constant_Pool);

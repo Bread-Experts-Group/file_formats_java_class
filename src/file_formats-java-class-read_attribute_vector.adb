@@ -49,13 +49,13 @@ begin
                     u2.Big_Endian'Input (Stream);
                   Local_Variable_Count : constant u2.Big_Endian :=
                     u2.Big_Endian'Input (Stream);
-                  Code_Length          : constant u4.Big_Endian :=
-                    u4.Big_Endian'Input (Stream);
-                  Code_Data            : Raw_Data (1 .. Code_Length);
+                  Code_Length          : constant Positive_u4 :=
+                    Positive_u4'Input (Stream);
+                  Code_Data            : Raw_Data_Filled (1 .. Code_Length);
                   Exception_Table      : CFA_Code_Exception_Vectors.Vector;
                   Attributes           : Attribute_Vector;
                begin
-                  Raw_Data'Read (Stream, Code_Data);
+                  Raw_Data_Filled'Read (Stream, Code_Data);
                   for Index in 1 .. u2.Big_Endian'Input (Stream) loop
                      declare
                         Start, Stop, Handle : u2.Big_Endian;
@@ -86,7 +86,7 @@ begin
                         Name_Ref             => Name,
                         Max_Stack_Size       => Max_Stack_Size,
                         Local_Variable_Count => Local_Variable_Count,
-                        Code                 => new Raw_Data'(Code_Data),
+                        Code                 => new Raw_Data_Filled'(Code_Data),
                         Exception_Table      => Exception_Table,
                         Attributes           =>
                           new Attribute_Vector'(Attributes)));
