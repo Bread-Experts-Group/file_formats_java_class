@@ -50,90 +50,96 @@ is
      Ada.Unchecked_Conversion (u8.Big_Endian, Standard.Long_Float);
 
    procedure Handle_Incomplete_Entry (Index : Constant_Pool_Index) is
-      Incomplete : constant Incomplete_Entry :=
-           Incomplete_Map.Element (Index);
    begin
-      case Incomplete.Tag is
-         when STRING =>
-            Item.Include
-               (Index,
-               Constant_Pool_Entry'
-                  (STRING,
-                     new Utf_8_Constant_Pool_Entry'
-                        (Utf_8_Constant_Pool_Entry
-                           (Item.Element (Incomplete.String_Ref)))));
+      if not Incomplete_Map.Contains (Index) then
+         raise Constraint_Error with "Possible misalignment." & "No incomplete entry for index" & Index'Image & " incomplete map: (" & Incomplete_Map.Length'Image & " /" & Incomplete_Map.Last_Key'Image & " )";
+      end if;
 
-         when CLASS =>
-            Item.Include
-               (Index,
-               Constant_Pool_Entry'
-                  (CLASS,
-                     new Utf_8_Constant_Pool_Entry'
-                        (Utf_8_Constant_Pool_Entry
-                           (Item.Element (Incomplete.Qualified_Name_Ref)))));
+      declare
+         Incomplete : constant Incomplete_Entry := Incomplete_Map.Element (Index);
+      begin
+         case Incomplete.Tag is
+            when STRING =>
+               Item.Include
+                  (Index,
+                  Constant_Pool_Entry'
+                     (STRING,
+                        new Utf_8_Constant_Pool_Entry'
+                           (Utf_8_Constant_Pool_Entry
+                              (Item.Element (Incomplete.String_Ref)))));
 
-         when NAME_AND_TYPE =>
-            Item.Include
-               (Index,
-               Constant_Pool_Entry'
-                  (NAME_AND_TYPE,
-                     new Utf_8_Constant_Pool_Entry'
-                        (Utf_8_Constant_Pool_Entry
-                           (Item.Element (Incomplete.Name_Ref))),
-                     new Utf_8_Constant_Pool_Entry'
-                        (Utf_8_Constant_Pool_Entry
-                           (Item.Element (Incomplete.Descriptor_Ref)))));
+            when CLASS =>
+               Item.Include
+                  (Index,
+                  Constant_Pool_Entry'
+                     (CLASS,
+                        new Utf_8_Constant_Pool_Entry'
+                           (Utf_8_Constant_Pool_Entry
+                              (Item.Element (Incomplete.Qualified_Name_Ref)))));
 
-         when FIELD_REFERENCE
-            | METHOD_REFERENCE
-            | INTERFACE_METHOD_REFERENCE
-         =>
-            Handle_Incomplete_Entry (Incomplete.Class_Ref);
-            Handle_Incomplete_Entry (Incomplete.Name_And_Type_Ref);
-            declare
-               Class         : constant Class_Constant_Pool_Entry :=
-                  Class_Constant_Pool_Entry
-                     (Item.Element (Incomplete.Class_Ref));
-               Name_And_Type : constant Name_And_Type_Constant_Pool_Entry :=
-                  Name_And_Type_Constant_Pool_Entry
-                     (Item.Element (Incomplete.Name_And_Type_Ref));
-            begin
-               case Incomplete.Tag is
-                  when FIELD_REFERENCE =>
-                     Item.Include
-                        (Index,
-                        Constant_Pool_Entry'
-                           (FIELD_REFERENCE,
-                           new Class_Constant_Pool_Entry'(Class),
-                              new Name_And_Type_Constant_Pool_Entry'
-                                 (Name_And_Type)));
+            when NAME_AND_TYPE =>
+               Item.Include
+                  (Index,
+                  Constant_Pool_Entry'
+                     (NAME_AND_TYPE,
+                        new Utf_8_Constant_Pool_Entry'
+                           (Utf_8_Constant_Pool_Entry
+                              (Item.Element (Incomplete.Name_Ref))),
+                        new Utf_8_Constant_Pool_Entry'
+                           (Utf_8_Constant_Pool_Entry
+                              (Item.Element (Incomplete.Descriptor_Ref)))));
 
-                  when METHOD_REFERENCE =>
-                     Item.Include
-                        (Index,
-                        Constant_Pool_Entry'
-                           (METHOD_REFERENCE,
-                           new Class_Constant_Pool_Entry'(Class),
-                              new Name_And_Type_Constant_Pool_Entry'
-                                 (Name_And_Type)));
+            when FIELD_REFERENCE
+               | METHOD_REFERENCE
+               | INTERFACE_METHOD_REFERENCE
+            =>
+               Handle_Incomplete_Entry (Incomplete.Class_Ref);
+               Handle_Incomplete_Entry (Incomplete.Name_And_Type_Ref);
+               declare
+                  Class         : constant Class_Constant_Pool_Entry :=
+                     Class_Constant_Pool_Entry
+                        (Item.Element (Incomplete.Class_Ref));
+                  Name_And_Type : constant Name_And_Type_Constant_Pool_Entry :=
+                     Name_And_Type_Constant_Pool_Entry
+                        (Item.Element (Incomplete.Name_And_Type_Ref));
+               begin
+                  case Incomplete.Tag is
+                     when FIELD_REFERENCE =>
+                        Item.Include
+                           (Index,
+                           Constant_Pool_Entry'
+                              (FIELD_REFERENCE,
+                              new Class_Constant_Pool_Entry'(Class),
+                                 new Name_And_Type_Constant_Pool_Entry'
+                                    (Name_And_Type)));
 
-                  when INTERFACE_METHOD_REFERENCE =>
-                     Item.Include
-                        (Index,
-                        Constant_Pool_Entry'
-                           (INTERFACE_METHOD_REFERENCE,
-                           new Class_Constant_Pool_Entry'(Class),
-                              new Name_And_Type_Constant_Pool_Entry'
-                                 (Name_And_Type)));
+                     when METHOD_REFERENCE =>
+                        Item.Include
+                           (Index,
+                           Constant_Pool_Entry'
+                              (METHOD_REFERENCE,
+                              new Class_Constant_Pool_Entry'(Class),
+                                 new Name_And_Type_Constant_Pool_Entry'
+                                    (Name_And_Type)));
 
-                  when others =>
-                     raise Constraint_Error;
-               end case;
-            end;
+                     when INTERFACE_METHOD_REFERENCE =>
+                        Item.Include
+                           (Index,
+                           Constant_Pool_Entry'
+                              (INTERFACE_METHOD_REFERENCE,
+                              new Class_Constant_Pool_Entry'(Class),
+                                 new Name_And_Type_Constant_Pool_Entry'
+                                    (Name_And_Type)));
 
-         when others =>
-            raise Constraint_Error;
-      end case;
+                     when others =>
+                        raise Constraint_Error;
+                  end case;
+               end;
+
+            when others =>
+               raise Constraint_Error;
+         end case;
+      end;
    end Handle_Incomplete_Entry;
 begin
    i2.Big_Endian'Read (Stream, Constant_Pool_Count);
