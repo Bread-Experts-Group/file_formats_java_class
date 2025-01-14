@@ -1,6 +1,5 @@
 pragma Ada_2022;
 
-with Ada.Text_IO;
 with Ada.Unchecked_Conversion;
 
 package body File_Formats.Java.Class is
@@ -130,8 +129,12 @@ package body File_Formats.Java.Class is
       Class_File_Magic'Read (Stream, Magic);
       u2.Big_Endian'Read (Stream, Minor_Version);
       u2.Big_Endian'Read (Stream, Major_Version);
-      if Major_Version > 50 then
-         raise Constraint_Error with "Class file major version" & Major_Version'Image & " is too high, max supported is 45";
+      if Major_Version > 51 then
+         raise Constraint_Error
+           with
+             "Class file major version"
+             & Major_Version'Image
+             & " is too high, max supported is 51";
       end if;
       Read_Constant_Pool_Map (Stream, Constant_Pool);
       Access_Flags := u2_To_Class_Access_Flags (u2.Big_Endian'Input (Stream));
@@ -142,7 +145,9 @@ package body File_Formats.Java.Class is
       begin
          u2.Big_Endian'Read (Stream, Interfaces_Count);
          for Index in 1 .. Interfaces_Count loop
-            Interfaces.Append (Class_Constant_Pool_Entry (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))));
+            Interfaces.Append
+              (Class_Constant_Pool_Entry
+                 (Constant_Pool.Element (Constant_Pool_Index'Input (Stream))));
          end loop;
       end;
       Read_Field_Vector
@@ -170,7 +175,8 @@ package body File_Formats.Java.Class is
             then
               new Class_Constant_Pool_Entry'
                 (Class_Constant_Pool_Entry
-                   (Constant_Pool.Element (Constant_Pool_Index (Super_Class_Idx))))
+                   (Constant_Pool.Element
+                      (Constant_Pool_Index (Super_Class_Idx))))
             else null),
          Interfaces,
          Fields,

@@ -1,3 +1,6 @@
+with Ada.Text_IO;
+with Ada.Unchecked_Conversion;
+
 ---------------------------
 -- Read_Attribute_Vector --
 ---------------------------
@@ -25,15 +28,6 @@ begin
                Attribute_Type := Other;
          end;
          case Attribute_Type is
-            when SourceFile =>
-               Item.Append
-                 (Class_File_Attribute'
-                    (Attribute_Type => SourceFile,
-                     Name_Ref       => Name,
-                     Source_File    =>
-                       Utf_8_Constant_Pool_Entry
-                         (Pool.Element (Constant_Pool_Index'Input (Stream)))));
-
             when ConstantValue =>
                Item.Append
                  (Class_File_Attribute'
@@ -67,10 +61,11 @@ begin
                         u2.Big_Endian'Read (Stream, Class_Idx);
                         Exception_Table.Append
                           (CFA_Code_Exception_Entry'
-                             (Start,
-                              Stop,
-                              Handle,
-                                (if Class_Idx = 0 then null
+                             (Program_Counter_Start => Start,
+                              Program_Counter_Stop => Stop,
+                              Program_Counter_Handler => Handle,
+
+                                Catch => (if Class_Idx = 0 then null
                                  else
                                    new Class_Constant_Pool_Entry'
                                      (Class_Constant_Pool_Entry
@@ -86,7 +81,8 @@ begin
                         Name_Ref             => Name,
                         Max_Stack_Size       => Max_Stack_Size,
                         Local_Variable_Count => Local_Variable_Count,
-                        Code                 => new Raw_Data_Filled'(Code_Data),
+                        Code                 =>
+                          new Raw_Data_Filled'(Code_Data),
                         Exception_Table      => Exception_Table,
                         Attributes           =>
                           new Attribute_Vector'(Attributes)));
@@ -94,38 +90,211 @@ begin
 
             when Exceptions =>
                declare
-                  New_Entry : Class_File_Attribute := (Attribute_Type => Exceptions, Name_Ref => Name, others => <>);
+                  New_Entry : Class_File_Attribute :=
+                    (Attribute_Type => Exceptions,
+                     Name_Ref       => Name,
+                     others         => <>);
                begin
                   for Index in 1 .. u2.Big_Endian'Input (Stream) loop
-                     New_Entry.Exceptions_Table.Append (Class_Constant_Pool_Entry (Pool.Element (Constant_Pool_Index'Input (Stream))));
+                     New_Entry.Exceptions_Table.Append
+                       (Class_Constant_Pool_Entry
+                          (Pool.Element (Constant_Pool_Index'Input (Stream))));
                   end loop;
                   Item.Append (New_Entry);
                end;
+
+            when InnerClasses =>
+               declare
+                  New_Entry : Class_File_Attribute :=
+                    (Attribute_Type => InnerClasses,
+                     Name_Ref       => Name,
+                     others         => <>);
+               begin
+                  for Index in 1 .. u2.Big_Endian'Input (Stream) loop
+                     declare
+                        Inner_Idx, Outer_Idx : u2.Big_Endian;
+                        Inner_Name_Idx       : u2.Big_Endian;
+                        Access_Flags_Raw     : u2.Big_Endian;
+
+                        function u2_To_Access_Flags is new Ada.Unchecked_Conversion (u2.Big_Endian, CFA_InnerClasses_Access_Flags);
+                     begin
+                        u2.Big_Endian'Read (Stream, Inner_Idx);
+                        u2.Big_Endian'Read (Stream, Outer_Idx);
+                        u2.Big_Endian'Read (Stream, Inner_Name_Idx);
+                        u2.Big_Endian'Read (Stream, Access_Flags_Raw);
+                        New_Entry.Inner_Classes.Append
+                          (CFA_InnerClasses_Class_Entry'
+                             (
+                                Inner_Class => (if Inner_Idx = 0 then null
+                                 else
+                                   new Class_Constant_Pool_Entry'
+                                     (Class_Constant_Pool_Entry
+                                        (Pool.Element
+                                           (Constant_Pool_Index
+                                              (Inner_Idx))))),
+
+                                Outer_Class => (if Outer_Idx = 0 then null
+                                 else
+                                   new Class_Constant_Pool_Entry'
+                                     (Class_Constant_Pool_Entry
+                                        (Pool.Element
+                                           (Constant_Pool_Index
+                                              (Outer_Idx))))),
+
+                                Inner_Class_Name => (if Inner_Name_Idx = 0 then null
+                                 else
+                                   new Utf_8_Constant_Pool_Entry'
+                                     (Utf_8_Constant_Pool_Entry
+                                        (Pool.Element
+                                           (Constant_Pool_Index
+                                              (Inner_Name_Idx))))),
+                              Inner_Class_Access => u2_To_Access_Flags (Access_Flags_Raw)));
+                     end;
+                  end loop;
+                  Item.Append (New_Entry);
+               end;
+
+            when EnclosingMethod =>
+               declare
+                  Enclosing_Class      : constant Class_Constant_Pool_Entry := Class_Constant_Pool_Entry (Pool.Element (Constant_Pool_Index'Input (Stream)));
+                  Enclosing_Method_Idx : constant u2.Big_Endian := u2.Big_Endian'Input (Stream);
+               begin
+                  Item.Append
+                  (Class_File_Attribute'
+                     (Attribute_Type => EnclosingMethod, Name_Ref => Name, Enclosing_Class => Enclosing_Class, Enclosing_Method => (if Enclosing_Method_Idx = 0 then null else new Name_And_Type_Constant_Pool_Entry'(Name_And_Type_Constant_Pool_Entry (Pool.Element (Constant_Pool_Index (Enclosing_Method_Idx)))))));
+               end;
+
+            when Synthetic =>
+               Item.Append
+                 (Class_File_Attribute'
+                    (Attribute_Type => Synthetic, Name_Ref => Name));
+
+            when Signature =>
+               Item.Append
+                 (Class_File_Attribute'
+                    (Attribute_Type => Signature, Name_Ref => Name, Generic_Signature => Utf_8_Constant_Pool_Entry
+                         (Pool.Element (Constant_Pool_Index'Input (Stream)))));
+
+            when SourceFile =>
+               Item.Append
+                 (Class_File_Attribute'
+                    (Attribute_Type => SourceFile,
+                     Name_Ref       => Name,
+                     Source_File    =>
+                       Utf_8_Constant_Pool_Entry
+                         (Pool.Element (Constant_Pool_Index'Input (Stream)))));
 
             when LineNumberTable =>
                declare
-                  New_Entry : Class_File_Attribute := (Attribute_Type => LineNumberTable, Name_Ref => Name, others => <>);
+                  New_Entry : Class_File_Attribute :=
+                    (Attribute_Type => LineNumberTable,
+                     Name_Ref       => Name,
+                     others         => <>);
                begin
                   for Index in 1 .. u2.Big_Endian'Input (Stream) loop
-                     New_Entry.Line_Number_Table.Append (CFA_LineNumberTable_Line_Entry'(u2.Big_Endian'Input (Stream), u2.Big_Endian'Input (Stream)));
+                     New_Entry.Line_Number_Table.Append
+                       (CFA_LineNumberTable_Line_Entry'
+                          (Program_Counter_Start => u2.Big_Endian'Input (Stream),
+                           Line_Number => u2.Big_Endian'Input (Stream)));
                   end loop;
                   Item.Append (New_Entry);
                end;
 
-            when Other =>
+            when LocalVariableTable =>
+               declare
+                  New_Entry : Class_File_Attribute :=
+                    (Attribute_Type => LocalVariableTable,
+                     Name_Ref       => Name,
+                     others         => <>);
+               begin
+                  for Index in 1 .. u2.Big_Endian'Input (Stream) loop
+                     New_Entry.Local_Variable_Table.Append
+                       (CFA_LocalVariableTable_Variable_Entry'
+                          (Program_Counter_Start => u2.Big_Endian'Input (Stream),
+                           Program_Counter_Length => u2.Big_Endian'Input (Stream),
+                             Name_Ref => Utf_8_Constant_Pool_Entry
+                               (Pool.Element
+                                  (Constant_Pool_Index'Input (Stream))),
+
+                             Descriptor_Ref => Utf_8_Constant_Pool_Entry
+                               (Pool.Element
+                                  (Constant_Pool_Index'Input (Stream))),
+                           Frame_Index => u2.Big_Endian'Input (Stream)));
+                  end loop;
+                  Item.Append (New_Entry);
+               end;
+
+            when LocalVariableTypeTable =>
+               declare
+                  New_Entry : Class_File_Attribute :=
+                    (Attribute_Type => LocalVariableTypeTable,
+                     Name_Ref       => Name,
+                     others         => <>);
+               begin
+                  for Index in 1 .. u2.Big_Endian'Input (Stream) loop
+                     New_Entry.Local_Variable_Type_Table.Append
+                       (CFA_LocalVariableTypeTable_Variable_Entry'
+                          (Program_Counter_Start => u2.Big_Endian'Input (Stream),
+                           Program_Counter_Length => u2.Big_Endian'Input (Stream),
+                             Name_Ref => Utf_8_Constant_Pool_Entry
+                               (Pool.Element
+                                  (Constant_Pool_Index'Input (Stream))),
+
+                             Signature_Ref => Utf_8_Constant_Pool_Entry
+                               (Pool.Element
+                                  (Constant_Pool_Index'Input (Stream))),
+                           Frame_Index => u2.Big_Endian'Input (Stream)));
+                  end loop;
+                  Item.Append (New_Entry);
+               end;
+
+            when Deprecated =>
+               Item.Append
+                 (Class_File_Attribute'
+                    (Attribute_Type => Deprecated, Name_Ref => Name));
+
+            when BootstrapMethods =>
+               declare
+                  New_Entry : Class_File_Attribute := Class_File_Attribute'(Attribute_Type => BootstrapMethods, Name_Ref => Name, others => <>);
+               begin  
+                  for Index in 1 .. u2.Big_Endian'Input (Stream) loop
+                     declare
+                        New_Method : CFA_BootstrapMethods_Method_Entry := CFA_BootstrapMethods_Method_Entry'(Method_Ref => Method_Handle_Constant_Pool_Entry (Pool.Element (Constant_Pool_Index (u2.Big_Endian'Input (Stream)))), others => <>);
+                     begin
+                        for Argument_Index in 1 .. u2.Big_Endian'Input (Stream) loop
+                           New_Method.Method_Arguments.Append (Pool.Element (Constant_Pool_Index (u2.Big_Endian'Input (Stream))));
+                        end loop;
+                        New_Entry.Bootstrap_Methods.Append (New_Method);
+                     end;
+                  end loop;
+                  Item.Append (New_Entry);
+                  Ada.Text_IO.Put_Line (New_Entry'Image);
+               end;
+
+            when Other | SourceDebugExtension =>
                declare
                   Data : Raw_Data (1 .. Length);
                begin
                   Raw_Data'Read (Stream, Data);
-                  Item.Append
-                    (Class_File_Attribute'
-                       (Attribute_Type => Other,
-                        Name_Ref       => Name,
-                        Data           => new Raw_Data'(Data)));
-               end;
+                  case Attribute_Type is
+                     when Other =>
+                        Item.Append
+                        (Class_File_Attribute'
+                           (Attribute_Type => Other,
+                              Name_Ref     => Name,
+                              Data         => new Raw_Data'(Data)));
 
-            when others =>
-               raise Constraint_Error with Attribute_Type'Image;
+                     when SourceDebugExtension =>
+                        Item.Append
+                        (Class_File_Attribute'
+                           (Attribute_Type    => SourceDebugExtension,
+                              Name_Ref        => Name,
+                              Debug_Extension => new Raw_Data'(Data)));
+
+                     when others =>
+                        raise Constraint_Error;
+                  end case;
+               end;
          end case;
       end;
    end loop;
