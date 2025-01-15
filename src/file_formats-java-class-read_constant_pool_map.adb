@@ -152,12 +152,13 @@ is
                Handle_Incomplete_Entry (Incomplete.Reference_Ref);
                declare
                   Reference : constant Constant_Pool_Entry :=
-                     Item.Element (Incomplete.Reference_Ref);
+                    Item.Element (Incomplete.Reference_Ref);
                begin
                   Item.Include
-                     (Index,
+                    (Index,
                      Constant_Pool_Entry'
-                        (METHOD_HANDLE, Incomplete.Kind,
+                       (METHOD_HANDLE,
+                        Incomplete.Kind,
                         new Constant_Pool_Entry'(Reference)));
                end;
 
@@ -168,19 +169,24 @@ is
                     (METHOD_TYPE,
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
-                            (Item.Element (Incomplete.Method_Descriptor_Ref)))));
+                            (Item.Element
+                               (Incomplete.Method_Descriptor_Ref)))));
 
             when INVOKE_DYNAMIC =>
                Handle_Incomplete_Entry (Incomplete.Method_Name_And_Type_Ref);
                declare
-                  Method_Name_And_Type : constant Name_And_Type_Constant_Pool_Entry :=
-                     Name_And_Type_Constant_Pool_Entry (Item.Element (Incomplete.Method_Name_And_Type_Ref));
+                  Method_Name_And_Type :
+                    constant Name_And_Type_Constant_Pool_Entry :=
+                      Name_And_Type_Constant_Pool_Entry
+                        (Item.Element (Incomplete.Method_Name_And_Type_Ref));
                begin
                   Item.Include
-                     (Index,
+                    (Index,
                      Constant_Pool_Entry'
-                        (INVOKE_DYNAMIC, Incomplete.Bootstrap_Method_Index,
-                        new Name_And_Type_Constant_Pool_Entry'(Method_Name_And_Type)));
+                       (INVOKE_DYNAMIC,
+                        Incomplete.Bootstrap_Method_Index,
+                          new Name_And_Type_Constant_Pool_Entry'
+                            (Method_Name_And_Type)));
                end;
 
             when others =>
@@ -395,80 +401,87 @@ begin
                end if;
             end;
 
-            when METHOD_HANDLE =>
-               declare
-                  Kind : constant Method_Handle_Reference_Kind :=
-                     Method_Handle_Reference_Kind'Input (Stream);
-                  Reference_Index : constant Constant_Pool_Index :=
-                     Constant_Pool_Index'Input (Stream);
-               begin
-                  if Item.Contains (Reference_Index) then
-                     declare
-                        Reference : constant Constant_Pool_Entry := Item.Element (Reference_Index);
-                     begin
-                        Item.Include
-                        (Constant_Pool_Position,
-                           Constant_Pool_Entry'
-                           (METHOD_HANDLE,
-                              Kind,
-                              new Constant_Pool_Entry'(Reference)));
-                     end;
-                  else
-                     Incomplete_Map.Include
-                     (Constant_Pool_Position,
-                        Incomplete_Entry'
-                        (METHOD_HANDLE, Kind, Reference_Index));
-                  end if;
-               end;
+         when METHOD_HANDLE =>
+            declare
+               Kind            : constant Method_Handle_Reference_Kind :=
+                 Method_Handle_Reference_Kind'Input (Stream);
+               Reference_Index : constant Constant_Pool_Index :=
+                 Constant_Pool_Index'Input (Stream);
+            begin
+               if Item.Contains (Reference_Index) then
+                  declare
+                     Reference : constant Constant_Pool_Entry :=
+                       Item.Element (Reference_Index);
+                  begin
+                     Item.Include
+                       (Constant_Pool_Position,
+                        Constant_Pool_Entry'
+                          (METHOD_HANDLE,
+                           Kind,
+                           new Constant_Pool_Entry'(Reference)));
+                  end;
+               else
+                  Incomplete_Map.Include
+                    (Constant_Pool_Position,
+                     Incomplete_Entry'(METHOD_HANDLE, Kind, Reference_Index));
+               end if;
+            end;
 
-            when METHOD_TYPE =>
-               declare
-                  Descriptor_Index : constant Constant_Pool_Index :=
-                     Constant_Pool_Index'Input (Stream);
-               begin
-                  if Item.Contains (Descriptor_Index) then
-                     declare
-                        Descriptor : constant Utf_8_Constant_Pool_Entry := Utf_8_Constant_Pool_Entry (Item.Element (Descriptor_Index));
-                     begin
-                        Item.Include
-                        (Constant_Pool_Position,
-                           Constant_Pool_Entry'
-                           (METHOD_TYPE,
-                              new Utf_8_Constant_Pool_Entry'(Descriptor)));
-                     end;
-                  else
-                     Incomplete_Map.Include
-                     (Constant_Pool_Position,
-                        Incomplete_Entry'
-                        (METHOD_TYPE, Descriptor_Index));
-                  end if;
-               end;
+         when METHOD_TYPE =>
+            declare
+               Descriptor_Index : constant Constant_Pool_Index :=
+                 Constant_Pool_Index'Input (Stream);
+            begin
+               if Item.Contains (Descriptor_Index) then
+                  declare
+                     Descriptor : constant Utf_8_Constant_Pool_Entry :=
+                       Utf_8_Constant_Pool_Entry
+                         (Item.Element (Descriptor_Index));
+                  begin
+                     Item.Include
+                       (Constant_Pool_Position,
+                        Constant_Pool_Entry'
+                          (METHOD_TYPE,
+                           new Utf_8_Constant_Pool_Entry'(Descriptor)));
+                  end;
+               else
+                  Incomplete_Map.Include
+                    (Constant_Pool_Position,
+                     Incomplete_Entry'(METHOD_TYPE, Descriptor_Index));
+               end if;
+            end;
 
-            when INVOKE_DYNAMIC =>
-               declare
-                  Bootstrap_Method_Index : constant u2.Big_Endian :=
-                     u2.Big_Endian'Input (Stream);
-                  Method_Name_And_Type_Index : constant Constant_Pool_Index :=
-                     Constant_Pool_Index'Input (Stream);
-               begin
-                  if Item.Contains (Method_Name_And_Type_Index) then
-                     declare
-                        Method_Name_And_Type : constant Name_And_Type_Constant_Pool_Entry := Name_And_Type_Constant_Pool_Entry (Item.Element (Method_Name_And_Type_Index));
-                     begin
-                        Item.Include
-                        (Constant_Pool_Position,
-                           Constant_Pool_Entry'
-                           (INVOKE_DYNAMIC,
-                              Bootstrap_Method_Index,
-                              new Name_And_Type_Constant_Pool_Entry'(Method_Name_And_Type)));
-                     end;
-                  else
-                     Incomplete_Map.Include
-                     (Constant_Pool_Position,
-                        Incomplete_Entry'
-                        (INVOKE_DYNAMIC, Bootstrap_Method_Index, Method_Name_And_Type_Index));
-                  end if;
-               end;
+         when INVOKE_DYNAMIC =>
+            declare
+               Bootstrap_Method_Index     : constant u2.Big_Endian :=
+                 u2.Big_Endian'Input (Stream);
+               Method_Name_And_Type_Index : constant Constant_Pool_Index :=
+                 Constant_Pool_Index'Input (Stream);
+            begin
+               if Item.Contains (Method_Name_And_Type_Index) then
+                  declare
+                     Method_Name_And_Type :
+                       constant Name_And_Type_Constant_Pool_Entry :=
+                         Name_And_Type_Constant_Pool_Entry
+                           (Item.Element (Method_Name_And_Type_Index));
+                  begin
+                     Item.Include
+                       (Constant_Pool_Position,
+                        Constant_Pool_Entry'
+                          (INVOKE_DYNAMIC,
+                           Bootstrap_Method_Index,
+                             new Name_And_Type_Constant_Pool_Entry'
+                               (Method_Name_And_Type)));
+                  end;
+               else
+                  Incomplete_Map.Include
+                    (Constant_Pool_Position,
+                     Incomplete_Entry'
+                       (INVOKE_DYNAMIC,
+                        Bootstrap_Method_Index,
+                        Method_Name_And_Type_Index));
+               end if;
+            end;
       end case;
 
       Constant_Pool_Position := @ + 1;

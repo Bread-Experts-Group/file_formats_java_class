@@ -75,30 +75,30 @@ package File_Formats.Java.Class is
    type Name_And_Type_Constant_Pool_Entry_Access is
      not null access Name_And_Type_Constant_Pool_Entry;
    type Name_And_Type_Constant_Pool_Entry_Access_Optional is
-      access Name_And_Type_Constant_Pool_Entry;
+     access Name_And_Type_Constant_Pool_Entry;
 
    type Method_Handle_Reference_Kind is
-      (REF_GET_FIELD,
-       REF_GET_STATIC,
-       REF_PUT_FIELD,
-       REF_PUT_STATIC,
-       REF_INVOKE_VIRTUAL,
-       REF_INVOKE_STATIC,
-       REF_INVOKE_SPECIAL,
-       REF_NEW_INVOKE_SPECIAL,
-       REF_INVOKE_INTERFACE)
+     (REF_GET_FIELD,
+      REF_GET_STATIC,
+      REF_PUT_FIELD,
+      REF_PUT_STATIC,
+      REF_INVOKE_VIRTUAL,
+      REF_INVOKE_STATIC,
+      REF_INVOKE_SPECIAL,
+      REF_NEW_INVOKE_SPECIAL,
+      REF_INVOKE_INTERFACE)
    with Size => 8;
 
    for Method_Handle_Reference_Kind use
-      (REF_GET_FIELD          => 1,
-       REF_GET_STATIC         => 2,
-       REF_PUT_FIELD          => 3,
-       REF_PUT_STATIC         => 4,
-       REF_INVOKE_VIRTUAL     => 5,
-       REF_INVOKE_STATIC      => 6,
-       REF_INVOKE_SPECIAL     => 7,
-       REF_NEW_INVOKE_SPECIAL => 8,
-       REF_INVOKE_INTERFACE   => 9);
+     (REF_GET_FIELD          => 1,
+      REF_GET_STATIC         => 2,
+      REF_PUT_FIELD          => 3,
+      REF_PUT_STATIC         => 4,
+      REF_INVOKE_VIRTUAL     => 5,
+      REF_INVOKE_STATIC      => 6,
+      REF_INVOKE_SPECIAL     => 7,
+      REF_NEW_INVOKE_SPECIAL => 8,
+      REF_INVOKE_INTERFACE   => 9);
 
    type Constant_Pool_Entry (Tag : Constant_Pool_Entry_Tag) is record
       case Tag is
@@ -141,7 +141,8 @@ package File_Formats.Java.Class is
 
          when INVOKE_DYNAMIC =>
             Bootstrap_Method_Index   : u2.Big_Endian;
-            Method_Name_And_Type_Ref : Name_And_Type_Constant_Pool_Entry_Access;
+            Method_Name_And_Type_Ref :
+              Name_And_Type_Constant_Pool_Entry_Access;
       end case;
    end record;
 
@@ -165,7 +166,8 @@ package File_Formats.Java.Class is
    type Class_Constant_Pool_Entry is new Constant_Pool_Entry (CLASS);
    type Name_And_Type_Constant_Pool_Entry is
      new Constant_Pool_Entry (NAME_AND_TYPE);
-   type Method_Handle_Constant_Pool_Entry is new Constant_Pool_Entry (METHOD_HANDLE);
+   type Method_Handle_Constant_Pool_Entry is
+     new Constant_Pool_Entry (METHOD_HANDLE);
 
    type Class_File_Access_Flags is record
       PUBLIC       : Boolean;
@@ -224,7 +226,7 @@ package File_Formats.Java.Class is
       LocalVariableTypeTable,
       Deprecated,
       RuntimeVisibleAnnotations,
-      RuntimeInivisibleAnnotations,
+      RuntimeInvisibleAnnotations,
       RuntimeVisibleParameterAnnotations,
       RuntimeInvisibleParameterAnnotations,
       AnnotationDefault,
@@ -250,6 +252,99 @@ package File_Formats.Java.Class is
      Ada.Containers.Vectors (Positive, CFA_Code_Exception_Entry);
    type Attribute_Vector;
    type Attribute_Vector_Access is not null access Attribute_Vector;
+
+   type CFA_SMT_Variable_Tag is
+     (ITEM_TOP,
+      ITEM_INTEGER,
+      ITEM_FLOAT,
+      ITEM_DOUBLE,
+      ITEM_LONG,
+      ITEM_NULL,
+      ITEM_UNINITIALIZED_THIS,
+      ITEM_OBJECT,
+      ITEM_UNINTIALIZED)
+   with Size => 8;
+
+   for CFA_SMT_Variable_Tag use
+     (ITEM_TOP                => 0,
+      ITEM_INTEGER            => 1,
+      ITEM_FLOAT              => 2,
+      ITEM_DOUBLE             => 3,
+      ITEM_LONG               => 4,
+      ITEM_NULL               => 5,
+      ITEM_UNINITIALIZED_THIS => 6,
+      ITEM_OBJECT             => 7,
+      ITEM_UNINTIALIZED       => 8);
+
+   type CFA_SMT_Verification_Type_Info (Tag : CFA_SMT_Variable_Tag) is record
+      case Tag is
+         when ITEM_TOP
+               | ITEM_INTEGER
+               | ITEM_FLOAT
+               | ITEM_DOUBLE
+               | ITEM_LONG
+               | ITEM_NULL
+               | ITEM_UNINITIALIZED_THIS =>
+            null;
+
+         when ITEM_OBJECT =>
+            Instance_Of_Ref : Class_Constant_Pool_Entry;
+
+         when ITEM_UNINTIALIZED =>
+            Code_Offset : u2.Big_Endian;
+      end case;
+   end record;
+
+   type CFA_SMT_Verification_Type_Info_Access is
+     not null access CFA_SMT_Verification_Type_Info;
+
+   package CFA_SMT_Verification_Type_Info_Vectors is new
+     Ada.Containers.Indefinite_Vectors
+       (Positive,
+        CFA_SMT_Verification_Type_Info);
+
+   type CFA_StackMapTable_Type is
+     (SAME,
+      SAME_LOCALS_1_STACK_ITEM,
+      RESERVED,
+      SAME_LOCALS_1_STACK_ITEM_EXTENDED,
+      CHOP,
+      SAME_FRAME_EXTENDED,
+      APPEND,
+      FULL_FRAME);
+
+   type CFA_StackMapTable_Frame (Frame_Type : CFA_StackMapTable_Type) is record
+      Offset_Delta : u2.Big_Endian;
+      case Frame_Type is
+         when SAME =>
+            null;
+
+         when SAME_LOCALS_1_STACK_ITEM =>
+            SL1_Stack_Item : CFA_SMT_Verification_Type_Info_Access;
+
+         when RESERVED =>
+            null;
+
+         when SAME_LOCALS_1_STACK_ITEM_EXTENDED =>
+            SL1E_Stack_Item : CFA_SMT_Verification_Type_Info_Access;
+
+         when CHOP =>
+            null;
+
+         when SAME_FRAME_EXTENDED =>
+            null;
+
+         when APPEND =>
+            APPEND_Stack : CFA_SMT_Verification_Type_Info_Vectors.Vector;
+
+         when FULL_FRAME =>
+            FF_Locals : CFA_SMT_Verification_Type_Info_Vectors.Vector;
+            FF_Stack  : CFA_SMT_Verification_Type_Info_Vectors.Vector;
+      end case;
+   end record;
+
+   package CFA_StackMapTable_Frame_Vectors is new
+     Ada.Containers.Indefinite_Vectors (Positive, CFA_StackMapTable_Frame);
 
    type CFA_InnerClasses_Access_Flags is record
       PUBLIC       : Boolean;
@@ -282,7 +377,7 @@ package File_Formats.Java.Class is
    type CFA_InnerClasses_Class_Entry is record
       Inner_Class, Outer_Class : Class_Constant_Pool_Entry_Access_Optional;
       Inner_Class_Name         : Utf_8_Constant_Pool_Entry_Access_Optional;
-      Inner_Class_Access      : CFA_InnerClasses_Access_Flags;
+      Inner_Class_Access       : CFA_InnerClasses_Access_Flags;
    end record;
 
    type CFA_LineNumberTable_Line_Entry is record
@@ -298,14 +393,71 @@ package File_Formats.Java.Class is
    end record;
 
    type CFA_LocalVariableTypeTable_Variable_Entry is record
-      Program_Counter_Start    : u2.Big_Endian;
-      Program_Counter_Length   : u2.Big_Endian;
+      Program_Counter_Start   : u2.Big_Endian;
+      Program_Counter_Length  : u2.Big_Endian;
       Name_Ref, Signature_Ref : Utf_8_Constant_Pool_Entry;
-      Frame_Index              : u2.Big_Endian;
+      Frame_Index             : u2.Big_Endian;
    end record;
 
    package Constant_Pool_Entry_Vectors is new
      Ada.Containers.Indefinite_Vectors (Positive, Constant_Pool_Entry);
+
+   type CFA_Annotation;
+   type CFA_Annotation_Access is not null access CFA_Annotation;
+
+   type CFA_Annotation_Element_Value_Vector;
+   type CFA_Annotation_Element_Value_Vector_Access is
+     not null access CFA_Annotation_Element_Value_Vector;
+
+   type CFA_Annotation_Element_Value (Tag : Character) is record
+      case Tag is
+         when 'B' | 'C' | 'D' | 'F' | 'I' | 'J' | 'S' | 'Z' | 's' =>
+            Constant_Value : Constant_Pool_Entry_Access;
+
+         when 'e' =>
+            Field_Descriptor   : Utf_8_Constant_Pool_Entry;
+            Enum_Constant_Name : Utf_8_Constant_Pool_Entry;
+
+         when 'c' =>
+            Return_Descriptor : Utf_8_Constant_Pool_Entry;
+
+         when '@' =>
+            Annotation : CFA_Annotation_Access;
+
+         when '[' =>
+            Element_Values : CFA_Annotation_Element_Value_Vector_Access;
+
+         when others =>
+            null;
+      end case;
+   end record;
+
+   type CFA_Annotation_Element_Value_Access is
+     not null access CFA_Annotation_Element_Value;
+
+   type CFA_Annotation_Element_Value_Pair is record
+      Element_Name  : Utf_8_Constant_Pool_Entry;
+      Element_Value : CFA_Annotation_Element_Value_Access;
+   end record;
+
+   package CFA_Annotation_Element_Value_Vectors is new
+     Ada.Containers.Indefinite_Vectors
+       (Positive,
+        CFA_Annotation_Element_Value);
+
+   package CFA_Annotation_Element_Value_Pair_Vectors is new
+     Ada.Containers.Indefinite_Vectors
+       (Positive,
+        CFA_Annotation_Element_Value_Pair);
+
+   type CFA_Annotation_Element_Value_Vector is
+     new CFA_Annotation_Element_Value_Vectors.Vector
+   with null record;
+
+   type CFA_Annotation is record
+      Field_Descriptor    : Utf_8_Constant_Pool_Entry;
+      Element_Value_Pairs : CFA_Annotation_Element_Value_Pair_Vectors.Vector;
+   end record;
 
    type CFA_BootstrapMethods_Method_Entry is record
       Method_Ref       : Method_Handle_Constant_Pool_Entry;
@@ -322,7 +474,18 @@ package File_Formats.Java.Class is
      Ada.Containers.Vectors (Positive, CFA_LocalVariableTable_Variable_Entry);
 
    package CFA_LocalVariableTypeTable_Variable_Vectors is new
-     Ada.Containers.Vectors (Positive, CFA_LocalVariableTypeTable_Variable_Entry);
+     Ada.Containers.Vectors
+       (Positive,
+        CFA_LocalVariableTypeTable_Variable_Entry);
+
+   package CFA_Annotation_Vectors is new
+     Ada.Containers.Indefinite_Vectors (Positive, CFA_Annotation);
+
+   package CFA_Parameter_Annotation_Vectors is new
+     Ada.Containers.Vectors
+       (Positive,
+        CFA_Annotation_Vectors.Vector,
+        CFA_Annotation_Vectors."=");
 
    package CFA_BootstrapMethods_Method_Vectors is new
      Ada.Containers.Vectors (Positive, CFA_BootstrapMethods_Method_Entry);
@@ -347,6 +510,9 @@ package File_Formats.Java.Class is
             Exception_Table      : CFA_Code_Exception_Vectors.Vector;
             Attributes           : Attribute_Vector_Access;
 
+         when StackMapTable =>
+            Stack_Map_Table : CFA_StackMapTable_Frame_Vectors.Vector;
+
          when Exceptions =>
             Exceptions_Table : Class_Vectors.Vector;
 
@@ -355,7 +521,8 @@ package File_Formats.Java.Class is
 
          when EnclosingMethod =>
             Enclosing_Class  : Class_Constant_Pool_Entry;
-            Enclosing_Method : Name_And_Type_Constant_Pool_Entry_Access_Optional;
+            Enclosing_Method :
+              Name_And_Type_Constant_Pool_Entry_Access_Optional;
 
          when Synthetic | Deprecated =>
             null;
@@ -377,9 +544,25 @@ package File_Formats.Java.Class is
             Local_Variable_Type_Table :
               CFA_LocalVariableTypeTable_Variable_Vectors.Vector;
 
+         when RuntimeVisibleAnnotations =>
+            Runtime_Visible_Annotations : CFA_Annotation_Vectors.Vector;
+
+         when RuntimeInvisibleAnnotations =>
+            Runtime_Invisible_Annotations : CFA_Annotation_Vectors.Vector;
+
+         when RuntimeVisibleParameterAnnotations =>
+            Runtime_Visible_Parameter_Annotations :
+              CFA_Parameter_Annotation_Vectors.Vector;
+
+         when RuntimeInvisibleParameterAnnotations =>
+            Runtime_Invisible_Parameter_Annotations :
+              CFA_Parameter_Annotation_Vectors.Vector;
+
+         when AnnotationDefault =>
+            Default_Value : CFA_Annotation_Element_Value_Access;
+
          when BootstrapMethods =>
-            Bootstrap_Methods :
-              CFA_BootstrapMethods_Method_Vectors.Vector;
+            Bootstrap_Methods : CFA_BootstrapMethods_Method_Vectors.Vector;
 
          when Other =>
             Data : Raw_Data_Access;
