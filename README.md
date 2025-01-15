@@ -81,13 +81,13 @@ Supported Elements (Java SE 7)
 Example Use
 -----------
 All pertinent types and subprograms are available within the package 
-`File_Formats.Java.Class`. Reading `Class_File` is done primarily through the `Input` aspect,
+`File_Formats_Java_Class`. Reading `Class_File` is done primarily through the `Input` aspect,
 as shown below.
 ```ada
 with Ada.Text_IO;
 
-with File_Formats.Java.Class;
-use  File_Formats.Java.Class;
+with File_Formats_Java_Class;
+use  File_Formats_Java_Class;
 
 procedure Read_Class_File is
     F : File_Type;
