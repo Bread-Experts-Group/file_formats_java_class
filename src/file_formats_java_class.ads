@@ -612,24 +612,10 @@ package File_Formats_Java_Class is
        ENUM at 1 range 6 .. 6;
      end record;
 
-   type Class_File_Field_Access_Flags_Any is new Class_File_Field_Access_Flags
-   with
-     Predicate =>
-       not (Class_File_Field_Access_Flags_Any.IS_PRIVATE
-            or else Class_File_Field_Access_Flags_Any.IS_PROTECTED
-            or else Class_File_Field_Access_Flags_Any.VOLATILE
-            or else Class_File_Field_Access_Flags_Any.TRANSIENT);
-
    type Class_File_Field (Environment : Class_File_Environment) is record
       Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry;
       Attributes               : Attribute_Vectors.Vector;
-      case Environment is
-         when CLASS =>
-            Access_Flags_Class : Class_File_Field_Access_Flags;
-
-         when IS_INTERFACE =>
-            Access_Flags_Others : Class_File_Field_Access_Flags_Any;
-      end case;
+      Access_Flags : Class_File_Field_Access_Flags;
    end record;
 
    package Field_Vectors is new
@@ -681,27 +667,10 @@ package File_Formats_Java_Class is
        SYNTHETIC at 1 range 4 .. 4;
      end record;
 
-   type Class_File_Method_Access_Flags_Any is
-     new Class_File_Method_Access_Flags
-   with
-     Predicate =>
-       not (Class_File_Method_Access_Flags_Any.IS_PRIVATE
-            or else Class_File_Method_Access_Flags_Any.IS_PROTECTED
-            or else Class_File_Method_Access_Flags_Any.STATIC
-            or else Class_File_Method_Access_Flags_Any.FINAL
-            or else Class_File_Method_Access_Flags_Any.IS_SYNCHRONIZED
-            or else Class_File_Method_Access_Flags_Any.NATIVE);
-
    type Class_File_Method (Environment : Class_File_Environment) is record
       Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry;
       Attributes               : Attribute_Vectors.Vector;
-      case Environment is
-         when CLASS =>
-            Access_Flags_Class : Class_File_Method_Access_Flags;
-
-         when IS_INTERFACE =>
-            Access_Flags_Others : Class_File_Method_Access_Flags_Any;
-      end case;
+      Access_Flags             : Class_File_Method_Access_Flags;
    end record;
 
    package Method_Vectors is new

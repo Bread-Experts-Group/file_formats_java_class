@@ -28,7 +28,7 @@ begin
                declare
                   Field : Class_File_Field :=
                     (Environment        => CLASS,
-                     Access_Flags_Class => Access_Flags,
+                     Access_Flags       => Access_Flags,
                      Name_Ref           => Utf_8_Constant_Pool_Entry (Name),
                      Descriptor_Ref     =>
                        Utf_8_Constant_Pool_Entry (Descriptor),
@@ -42,8 +42,7 @@ begin
                declare
                   Field : Class_File_Field :=
                     (Environment         => IS_INTERFACE,
-                     Access_Flags_Others =>
-                       Class_File_Field_Access_Flags_Any (Access_Flags),
+                     Access_Flags        => Access_Flags,
                      Name_Ref            => Utf_8_Constant_Pool_Entry (Name),
                      Descriptor_Ref      =>
                        Utf_8_Constant_Pool_Entry (Descriptor),
