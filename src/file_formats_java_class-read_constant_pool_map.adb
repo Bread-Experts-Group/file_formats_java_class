@@ -108,10 +108,10 @@ is
                Handle_Incomplete_Entry (Incomplete.Class_Ref);
                Handle_Incomplete_Entry (Incomplete.Name_And_Type_Ref);
                declare
-                  Class         : constant Class_Constant_Pool_Entry :=
+                  Class_Ref         : constant Class_Constant_Pool_Entry :=
                     Class_Constant_Pool_Entry
                       (Item.Element (Incomplete.Class_Ref));
-                  Name_And_Type : constant Name_And_Type_Constant_Pool_Entry :=
+                  Name_And_Type_Ref : constant Name_And_Type_Constant_Pool_Entry :=
                     Name_And_Type_Constant_Pool_Entry
                       (Item.Element (Incomplete.Name_And_Type_Ref));
                begin
@@ -121,27 +121,27 @@ is
                           (Index,
                            Constant_Pool_Entry'
                              (FIELD_REFERENCE,
-                              new Class_Constant_Pool_Entry'(Class),
+                              new Class_Constant_Pool_Entry'(Class_Ref),
                                 new Name_And_Type_Constant_Pool_Entry'
-                                  (Name_And_Type)));
+                                  (Name_And_Type_Ref)));
 
                      when METHOD_REFERENCE =>
                         Item.Include
                           (Index,
                            Constant_Pool_Entry'
                              (METHOD_REFERENCE,
-                              new Class_Constant_Pool_Entry'(Class),
+                              new Class_Constant_Pool_Entry'(Class_Ref),
                                 new Name_And_Type_Constant_Pool_Entry'
-                                  (Name_And_Type)));
+                                  (Name_And_Type_Ref)));
 
                      when INTERFACE_METHOD_REFERENCE =>
                         Item.Include
                           (Index,
                            Constant_Pool_Entry'
                              (INTERFACE_METHOD_REFERENCE,
-                              new Class_Constant_Pool_Entry'(Class),
+                              new Class_Constant_Pool_Entry'(Class_Ref),
                                 new Name_And_Type_Constant_Pool_Entry'
-                                  (Name_And_Type)));
+                                  (Name_And_Type_Ref)));
 
                      when others =>
                         raise Impossible_Branch;
@@ -294,9 +294,9 @@ begin
                  and then Item.Contains (Name_And_Type_Index)
                then
                   declare
-                     Class         : constant Class_Constant_Pool_Entry :=
+                     Class_Ref         : constant Class_Constant_Pool_Entry :=
                        Class_Constant_Pool_Entry (Item.Element (Class_Index));
-                     Name_And_Type :
+                     Name_And_Type_Ref :
                        constant Name_And_Type_Constant_Pool_Entry :=
                          Name_And_Type_Constant_Pool_Entry
                            (Item.Element (Name_And_Type_Index));
@@ -307,30 +307,27 @@ begin
                              (Constant_Pool_Position,
                               Constant_Pool_Entry'
                                 (FIELD_REFERENCE,
-                                 new Class_Constant_Pool_Entry'(Class),
-
+                                 new Class_Constant_Pool_Entry'(Class_Ref),
                                    new Name_And_Type_Constant_Pool_Entry'
-                                     (Name_And_Type)));
+                                     (Name_And_Type_Ref)));
 
                         when METHOD_REFERENCE =>
                            Item.Include
                              (Constant_Pool_Position,
                               Constant_Pool_Entry'
                                 (METHOD_REFERENCE,
-                                 new Class_Constant_Pool_Entry'(Class),
-
+                                 new Class_Constant_Pool_Entry'(Class_Ref),
                                    new Name_And_Type_Constant_Pool_Entry'
-                                     (Name_And_Type)));
+                                     (Name_And_Type_Ref)));
 
                         when INTERFACE_METHOD_REFERENCE =>
                            Item.Include
                              (Constant_Pool_Position,
                               Constant_Pool_Entry'
                                 (INTERFACE_METHOD_REFERENCE,
-                                 new Class_Constant_Pool_Entry'(Class),
-
+                                 new Class_Constant_Pool_Entry'(Class_Ref),
                                    new Name_And_Type_Constant_Pool_Entry'
-                                     (Name_And_Type)));
+                                     (Name_And_Type_Ref)));
 
                         when others =>
                            raise Impossible_Branch;
@@ -488,8 +485,8 @@ begin
       exit when Constant_Pool_Position >= Constant_Pool_Count;
    end loop;
 
-   for Incomplete_Entry in Incomplete_Map.Iterate loop
-      Handle_Incomplete_Entry (Incomplete_Entry.Key);
+   for Incomplete_Entry_Element in Incomplete_Map.Iterate loop
+      Handle_Incomplete_Entry (Incomplete_Entry_Element.Key);
    end loop;
    Incomplete_Map.Clear;
 

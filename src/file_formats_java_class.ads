@@ -175,13 +175,21 @@ package File_Formats_Java_Class is
 
    type Class_File_Access_Flags is record
       PUBLIC       : Boolean;
+      RESERVED_01  : Boolean;
+      RESERVED_02  : Boolean;
+      RESERVED_03  : Boolean;
       FINAL        : Boolean;
       SUPER        : Boolean;
+      RESERVED_06  : Boolean;
+      RESERVED_07  : Boolean;
+      RESERVED_10  : Boolean;
       IS_INTERFACE : Boolean;
       IS_ABSTRACT  : Boolean;
+      RESERVED_13  : Boolean;
       SYNTHETIC    : Boolean;
       ANNOTATION   : Boolean;
       ENUM         : Boolean;
+      RESERVED_17  : Boolean;
    end record
    with
      Size => 16,
@@ -192,13 +200,21 @@ package File_Formats_Java_Class is
    for Class_File_Access_Flags use
      record
        PUBLIC at 0 range 0 .. 0;
+       RESERVED_01 at 0 range 1 .. 1;
+       RESERVED_02 at 0 range 2 .. 2;
+       RESERVED_03 at 0 range 3 .. 3;
        FINAL at 0 range 4 .. 4;
        SUPER at 0 range 5 .. 5;
+       RESERVED_06 at 0 range 6 .. 6;
+       RESERVED_07 at 0 range 7 .. 7;
+       RESERVED_10 at 1 range 0 .. 0;
        IS_INTERFACE at 1 range 1 .. 1;
        IS_ABSTRACT at 1 range 2 .. 2;
+       RESERVED_13 at 1 range 3 .. 3;
        SYNTHETIC at 1 range 4 .. 4;
        ANNOTATION at 1 range 5 .. 5;
        ENUM at 1 range 6 .. 6;
+       RESERVED_17 at 1 range 7 .. 7;
      end record;
 
    --  NOTE: .Vectors would be preferred here, however it causes an access
@@ -356,11 +372,17 @@ package File_Formats_Java_Class is
       IS_PROTECTED : Boolean;
       STATIC       : Boolean;
       FINAL        : Boolean;
+      RESERVED_05  : Boolean;
+      RESERVED_06  : Boolean;
+      RESERVED_07  : Boolean;
+      RESERVED_10  : Boolean;
       IS_INTERFACE : Boolean;
       IS_ABSTRACT  : Boolean;
+      RESERVED_13  : Boolean;
       SYNTHETIC    : Boolean;
       ANNOTATION   : Boolean;
       ENUM         : Boolean;
+      RESERVED_17  : Boolean;
    end record
    with Size => 16;
 
@@ -371,11 +393,17 @@ package File_Formats_Java_Class is
        IS_PROTECTED at 0 range 2 .. 2;
        STATIC at 0 range 3 .. 3;
        FINAL at 0 range 4 .. 4;
+       RESERVED_05 at 0 range 5 .. 5;
+       RESERVED_06 at 0 range 6 .. 6;
+       RESERVED_07 at 0 range 7 .. 7;
+       RESERVED_10 at 1 range 0 .. 0;
        IS_INTERFACE at 1 range 1 .. 1;
        IS_ABSTRACT at 1 range 2 .. 2;
+       RESERVED_13 at 1 range 3 .. 3;
        SYNTHETIC at 1 range 4 .. 4;
        ANNOTATION at 1 range 5 .. 5;
        ENUM at 1 range 6 .. 6;
+       RESERVED_17 at 1 range 7 .. 7;
      end record;
 
    type CFA_InnerClasses_Class_Entry is record
@@ -596,10 +624,17 @@ package File_Formats_Java_Class is
       IS_PROTECTED : Boolean;
       STATIC       : Boolean;
       FINAL        : Boolean;
+      RESERVED_05  : Boolean;
       VOLATILE     : Boolean;
       TRANSIENT    : Boolean;
+      RESERVED_10  : Boolean;
+      RESERVED_11  : Boolean;
+      RESERVED_12  : Boolean;
+      RESERVED_13  : Boolean;
       SYNTHETIC    : Boolean;
+      RESERVED_15  : Boolean;
       ENUM         : Boolean;
+      RESERVED_17  : Boolean;
    end record
    with Size => 16;
 
@@ -610,10 +645,17 @@ package File_Formats_Java_Class is
        IS_PROTECTED at 0 range 2 .. 2;
        STATIC at 0 range 3 .. 3;
        FINAL at 0 range 4 .. 4;
+       RESERVED_05 at 0 range 5 .. 5;
        VOLATILE at 0 range 6 .. 6;
        TRANSIENT at 0 range 7 .. 7;
+       RESERVED_10 at 1 range 0 .. 0;
+       RESERVED_11 at 1 range 1 .. 1;
+       RESERVED_12 at 1 range 2 .. 2;
+       RESERVED_13 at 1 range 3 .. 3;
        SYNTHETIC at 1 range 4 .. 4;
+       RESERVED_15 at 1 range 5 .. 5;
        ENUM at 1 range 6 .. 6;
+       RESERVED_17 at 1 range 7 .. 7;
      end record;
 
    type Class_File_Field (Environment : Class_File_Environment) is record
@@ -649,9 +691,13 @@ package File_Formats_Java_Class is
       BRIDGE          : Boolean;
       VARARGS         : Boolean;
       NATIVE          : Boolean;
+      RESERVED_11     : Boolean;
       IS_ABSTRACT     : Boolean;
       STRICT          : Boolean;
       SYNTHETIC       : Boolean;
+      RESERVED_15     : Boolean;
+      RESERVED_16     : Boolean;
+      RESERVED_17     : Boolean;
    end record
    with Size => 16;
 
@@ -666,9 +712,13 @@ package File_Formats_Java_Class is
        BRIDGE at 0 range 6 .. 6;
        VARARGS at 0 range 7 .. 7;
        NATIVE at 1 range 0 .. 0;
+       RESERVED_11 at 1 range 1 .. 1;
        IS_ABSTRACT at 1 range 2 .. 2;
        STRICT at 1 range 3 .. 3;
        SYNTHETIC at 1 range 4 .. 4;
+       RESERVED_15 at 1 range 5 .. 5;
+       RESERVED_16 at 1 range 6 .. 6;
+       RESERVED_17 at 1 range 7 .. 7;
      end record;
 
    type Class_File_Method (Environment : Class_File_Environment) is record

@@ -12,7 +12,7 @@ procedure Read_Attribute_Vector
 is
    Attribute_Type : Class_File_Attribute_Type;
 begin
-   for Index in 1 .. u2.Big_Endian'Input (Stream) loop
+   for Attribute_Index in 1 .. u2.Big_Endian'Input (Stream) loop
       declare
          Name   : constant Utf_8_Constant_Pool_Entry :=
            Utf_8_Constant_Pool_Entry
@@ -145,15 +145,16 @@ begin
          begin
             for Index in 1 .. u2.Big_Endian'Input (Stream) loop
                declare
-                  Name  : constant Utf_8_Constant_Pool_Entry :=
+                  Annotation_Name : constant Utf_8_Constant_Pool_Entry :=
                     Utf_8_Constant_Pool_Entry
                       (Pool.Element (Constant_Pool_Index'Input (Stream)));
-                  Value : constant CFA_Annotation_Element_Value :=
+                  Value           : constant CFA_Annotation_Element_Value :=
                     Read_Element_Value;
                begin
                   New_Annotation.Element_Value_Pairs.Append
                     (CFA_Annotation_Element_Value_Pair'
-                       (Name, new CFA_Annotation_Element_Value'(Value)));
+                       (Annotation_Name,
+                        new CFA_Annotation_Element_Value'(Value)));
                end;
             end loop;
             return New_Annotation;
@@ -239,13 +240,13 @@ begin
                   use type Byteflippers.Unsigned_8;
 
                   function Read_Type_Info_Vector
-                    (Length : u2.Big_Endian)
+                    (Count : u2.Big_Endian)
                      return CFA_SMT_Verification_Type_Info_Vectors.Vector
                   is
                      Vector : CFA_SMT_Verification_Type_Info_Vectors.Vector;
                      Tag    : CFA_SMT_Variable_Tag;
                   begin
-                     for Index in 1 .. Length loop
+                     for Index in 1 .. Count loop
                         CFA_SMT_Variable_Tag'Read (Stream, Tag);
                         case Tag is
                            when ITEM_TOP =>

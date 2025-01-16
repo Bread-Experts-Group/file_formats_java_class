@@ -15,7 +15,7 @@ project File_Formats_Java_Class is
    for Library_Kind use Library_Type;
 
    package Compiler is
-      for Switches ("Ada") use ("-gnatwa", "-gnatwh", "-gnatw.h", "-gnatwl", "-gnatwo", "-gnatw.o", "-gnatw.q", "-gnatw_q", "-gnatw_r", "-gnatw.s", "-gnatw_s", "-gnatwt", "-gnatw.u");
+      for Switches ("Ada") use ("-gnatwae", "-gnatwh", "-gnatw.h", "-gnatwl", "-gnatwo", "-gnatw.o", "-gnatw.q", "-gnatw_q", "-gnatw_r", "-gnatw.s", "-gnatw_s", "-gnatwt", "-gnatw.u");
       for Default_Switches ("Ada") use File_Formats_Java_Class_Config.Ada_Compiler_Switches;
    end Compiler;
 
