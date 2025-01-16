@@ -6,6 +6,10 @@ with Byteflippers;
 
 package File_Formats_Java_Class is
 
+   Possible_Misalignment : exception;
+   Unsupported_Version   : exception;
+   Impossible_Branch     : exception;
+
    package u8 renames Byteflippers.Endians_Unsigned_64;
    package u4 renames Byteflippers.Endians_Unsigned_32;
    package u2 renames Byteflippers.Endians_Unsigned_16;

@@ -144,7 +144,7 @@ is
                                   (Name_And_Type)));
 
                      when others =>
-                        raise Constraint_Error with Incomplete'Image;
+                        raise Impossible_Branch;
                   end case;
                end;
 
@@ -190,7 +190,7 @@ is
                end;
 
             when others =>
-               raise Constraint_Error;
+               raise Possible_Misalignment with "A complete entry of " & Incomplete'Image & " at index" & Index'Image & " was added to the incomplete pool";
          end case;
       end;
    end Handle_Incomplete_Entry;
@@ -261,7 +261,7 @@ begin
                                  new Utf_8_Constant_Pool_Entry'(Utf8)));
 
                         when others =>
-                           raise Constraint_Error;
+                           raise Impossible_Branch;
                      end case;
                   end;
                else
@@ -277,7 +277,7 @@ begin
                            Incomplete_Entry'(STRING, Name_Index));
 
                      when others =>
-                        raise Constraint_Error;
+                        raise Impossible_Branch;
                   end case;
                end if;
             end;
@@ -333,7 +333,7 @@ begin
                                      (Name_And_Type)));
 
                         when others =>
-                           raise Constraint_Error;
+                           raise Impossible_Branch;
                      end case;
                   end;
                else
@@ -363,7 +363,7 @@ begin
                               Name_And_Type_Index));
 
                      when others =>
-                        raise Constraint_Error;
+                        raise Impossible_Branch;
                   end case;
                end if;
             end;
@@ -494,7 +494,7 @@ begin
    Incomplete_Map.Clear;
 
    if (Constant_Pool_Count - 1) /= Constant_Pool_Index (Item.Last_Key) then
-      raise Program_Error
+      raise Possible_Misalignment
         with
           "Constant Pool has incorrect size ("
           & Item.Length'Image

@@ -132,7 +132,7 @@ begin
                   end;
 
                when others =>
-                  return raise Constraint_Error with Tag'Image;
+                  return raise Possible_Misalignment with "Element Value has bad tag of " & Tag'Image;
             end case;
          end Read_Element_Value;
 
@@ -325,7 +325,7 @@ begin
                                         .First_Element)));
 
                         when 128 .. 246 =>
-                           raise Constraint_Error
+                           raise Possible_Misalignment
                              with
                                "SMT Reserved,"
                                & Frame_Type'Image
@@ -630,7 +630,7 @@ begin
                               Runtime_Invisible_Annotations => Vector));
 
                      when others =>
-                        raise Constraint_Error;
+                        raise Impossible_Branch;
                   end case;
                end;
 
@@ -672,7 +672,7 @@ begin
                                 Vector));
 
                      when others =>
-                        raise Constraint_Error;
+                        raise Impossible_Branch;
                   end case;
                end;
 
@@ -737,7 +737,7 @@ begin
                               Debug_Extension => new Raw_Data'(Data)));
 
                      when others =>
-                        raise Constraint_Error;
+                        raise Impossible_Branch;
                   end case;
                end;
          end case;

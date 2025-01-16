@@ -130,7 +130,7 @@ package body File_Formats_Java_Class is
       u2.Big_Endian'Read (Stream, Minor_Version);
       u2.Big_Endian'Read (Stream, Major_Version);
       if Major_Version > 51 then
-         raise Constraint_Error
+         raise Unsupported_Version
            with
              "Class file major version"
              & Major_Version'Image
