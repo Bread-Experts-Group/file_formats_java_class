@@ -1,6 +1,3 @@
-pragma Ada_2022;
-pragma Extensions_Allowed (On);
-
 with Ada.Unchecked_Conversion;
 
 ----------------------------
@@ -486,7 +483,8 @@ begin
    end loop;
 
    for Incomplete_Entry_Element in Incomplete_Map.Iterate loop
-      Handle_Incomplete_Entry (Incomplete_Entry_Element.Key);
+      Handle_Incomplete_Entry
+         (Incomplete_Pool_Maps.Key (Incomplete_Entry_Element));
    end loop;
    Incomplete_Map.Clear;
 

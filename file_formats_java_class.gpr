@@ -14,9 +14,28 @@ project File_Formats_Java_Class is
      external ("FILE_FORMATS_JAVA_CLASS_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
    for Library_Kind use Library_Type;
 
+   package Builder is
+      for Switches ("Ada") use ("-m", "-d", "-s", "-j0");
+   end Builder;
+
    package Compiler is
-      for Switches ("Ada") use ("-gnatwae", "-gnatwh", "-gnatw.h", "-gnatwl", "-gnatwo", "-gnatw.o", "-gnatw.q", "-gnatw_q", "-gnatw_r", "-gnatw.s", "-gnatw_s", "-gnatwt", "-gnatw.u");
-      for Default_Switches ("Ada") use File_Formats_Java_Class_Config.Ada_Compiler_Switches;
+      for Switches ("Ada") use
+         ("-gnat2022",
+          "-gnatwae",
+          "-gnatwh",
+          "-gnatw.h",
+          "-gnatwl",
+          "-gnatwo",
+          "-gnatw.o",
+          "-gnatw.q",
+          "-gnatw_q",
+          "-gnatw_r",
+          "-gnatw.s",
+          "-gnatw_s",
+          "-gnatwt",
+          "-gnatw.u");
+      for Default_Switches ("Ada")
+         use File_Formats_Java_Class_Config.Ada_Compiler_Switches;
    end Compiler;
 
    package Binder is

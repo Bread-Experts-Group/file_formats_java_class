@@ -6,6 +6,9 @@ in the [Java Virtual Machine Specification](https://docs.oracle.com/javase/specs
 [Java SE 7, CLASS major file version 51](https://docs.oracle.com/javase/specs/jvms/se7/html/index.html),
 [chapter 4](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html).
 
+This library is not constrained by any compiler, but does depend on the *2022
+specification of Ada*.
+
 Supported Elements (Java SE 7)
 ------------------------------
 - Class Access Flags (Table 4.1)
@@ -107,7 +110,7 @@ This crate does not yet define operations for writing to CLASS files, but this i
 After writing is complete, this crate will be updated to support CLASS files of Java SE 8+.
 You are free to report issues and contribute at the crate's [GitHub repository](https://github.com/Bread-Experts-Group/file_formats_java_class).
 """
-version = "7.0.0-dev"
+version = "7.1.0"
 
 authors = ["Miko Elbrecht"]
 maintainers = ["Miko Elbrecht <pmt.mailservice@gmail.com>"]
@@ -117,4 +120,10 @@ website = "https://github.com/Bread-Experts-Group/file_formats_java_class"
 tags = ["file", "formats", "java", "class"]
 
 [[depends-on]]
-byteflippers = "^1.0.0"
+byteflippers = "^1.1.0"
+
+[[depends-on]]
+octet_memory_stream = "~0.1.0-dev"
+
+[[pins]]
+octet_memory_stream = { path='../../Projects/octet_memory_stream' }

@@ -2,7 +2,9 @@ with Ada.Containers.Indefinite_Ordered_Maps;
 with Ada.Containers.Indefinite_Vectors;
 with Ada.Containers.Vectors;
 with Ada.Streams;
+
 with Byteflippers;
+with Octet_Memory_Stream;
 
 package File_Formats_Java_Class is
 
@@ -252,9 +254,6 @@ package File_Formats_Java_Class is
       AnnotationDefault,
       BootstrapMethods,
       Other);
-
-   type Raw_Data is array (u4.Big_Endian range <>) of Byteflippers.Unsigned_8;
-   type Raw_Data_Access is not null access Raw_Data;
 
    type Positive_u4 is new u4.Big_Endian range 1 .. u4.Big_Endian'Last;
    type Raw_Data_Filled is
@@ -520,7 +519,7 @@ package File_Formats_Java_Class is
         CFA_Annotation_Vectors."=");
 
    package CFA_BootstrapMethods_Method_Vectors is new
-     Ada.Containers.Vectors (Positive, CFA_BootstrapMethods_Method_Entry);
+     Ada.Containers.Indefinite_Vectors (Positive, CFA_BootstrapMethods_Method_Entry);
 
    package Class_Vectors is new
      Ada.Containers.Indefinite_Vectors (Positive, Class_Constant_Pool_Entry);
@@ -563,7 +562,7 @@ package File_Formats_Java_Class is
             Generic_Signature : Utf_8_Constant_Pool_Entry;
 
          when SourceDebugExtension =>
-            Debug_Extension : Raw_Data_Access;
+            Debug_Extension : Octet_Memory_Stream.Octet_Array_Access;
 
          when LineNumberTable =>
             Line_Number_Table : CFA_LineNumberTable_Line_Vectors.Vector;
@@ -597,7 +596,7 @@ package File_Formats_Java_Class is
             Bootstrap_Methods : CFA_BootstrapMethods_Method_Vectors.Vector;
 
          when Other =>
-            Data : Raw_Data_Access;
+            Data : Octet_Memory_Stream.Octet_Array_Access;
       end case;
    end record;
 

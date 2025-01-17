@@ -1,12 +1,17 @@
 file_formats_java_class
 =======================
+
 `file_formats_java_class` provides the facilities for reading CLASS files defined
 in the [Java Virtual Machine Specification](https://docs.oracle.com/javase/specs/),
 [Java SE 7, CLASS major file version 51](https://docs.oracle.com/javase/specs/jvms/se7/html/index.html),
 [chapter 4](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html).
 
+This library is not constrained by any compiler, but does depend on the *2022
+specification of Ada*.
+
 Supported Elements (Java SE 7)
 ------------------------------
+
 - Class Access Flags (Table 4.1)
   - `ACC_PUBLIC`
   - `ACC_FINAL`
@@ -80,9 +85,11 @@ Supported Elements (Java SE 7)
 
 Example Use
 -----------
-All pertinent types and subprograms are available within the package 
+
+All pertinent types and subprograms are available within the package
 `File_Formats_Java_Class`. Reading `Class_File` is done primarily through the `Input` aspect,
 as shown below.
+
 ```ada
 with Ada.Text_IO;
 
@@ -102,6 +109,7 @@ end Read_Class_File;
 
 Development Status
 ------------------
+
 This crate does not yet define operations for writing to CLASS files, but this is a priority.
 After writing is complete, this crate will be updated to support CLASS files of Java SE 8+.
 You are free to report issues and contribue to this repository.

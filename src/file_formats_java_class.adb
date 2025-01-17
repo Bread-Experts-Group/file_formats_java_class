@@ -1,5 +1,3 @@
-pragma Ada_2022;
-
 with Ada.Unchecked_Conversion;
 
 package body File_Formats_Java_Class is
@@ -129,12 +127,12 @@ package body File_Formats_Java_Class is
       Class_File_Magic'Read (Stream, Magic);
       u2.Big_Endian'Read (Stream, Minor_Version);
       u2.Big_Endian'Read (Stream, Major_Version);
-      if Major_Version > 51 then
+      if Major_Version > 52 then
          raise Unsupported_Version
            with
              "Class file major version"
              & Major_Version'Image
-             & " is too high, max supported is 51";
+             & " is too high, max supported is 52";
       end if;
       Read_Constant_Pool_Map (Stream, Constant_Pool);
       Access_Flags := u2_To_Class_Access_Flags (u2.Big_Endian'Input (Stream));
