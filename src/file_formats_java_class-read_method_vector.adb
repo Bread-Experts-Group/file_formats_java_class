@@ -27,12 +27,11 @@ begin
             when CLASS =>
                declare
                   Method : Class_File_Method :=
-                    (Environment        => CLASS,
-                     Access_Flags       => Access_Flags,
-                     Name_Ref           => Utf_8_Constant_Pool_Entry (Name),
-                     Descriptor_Ref     =>
-                       Utf_8_Constant_Pool_Entry (Descriptor),
-                     others             => <>);
+                    (Environment    => CLASS,
+                     Access_Flags   => Access_Flags,
+                     Name_Ref       => Utf_8_Constant_Pool_Entry (Name),
+                     Descriptor_Ref => Utf_8_Constant_Pool_Entry (Descriptor),
+                     others         => <>);
                begin
                   Read_Attribute_Vector (Stream, Method.Attributes, Pool);
                   Item.Append (Method);
@@ -41,12 +40,11 @@ begin
             when IS_INTERFACE =>
                declare
                   Method : Class_File_Method :=
-                    (Environment         => IS_INTERFACE,
-                     Access_Flags        => Access_Flags,
-                     Name_Ref            => Utf_8_Constant_Pool_Entry (Name),
-                     Descriptor_Ref      =>
-                       Utf_8_Constant_Pool_Entry (Descriptor),
-                     others              => <>);
+                    (Environment    => IS_INTERFACE,
+                     Access_Flags   => Access_Flags,
+                     Name_Ref       => Utf_8_Constant_Pool_Entry (Name),
+                     Descriptor_Ref => Utf_8_Constant_Pool_Entry (Descriptor),
+                     others         => <>);
                begin
                   Read_Attribute_Vector (Stream, Method.Attributes, Pool);
                   Item.Append (Method);

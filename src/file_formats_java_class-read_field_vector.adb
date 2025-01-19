@@ -27,12 +27,11 @@ begin
             when CLASS =>
                declare
                   Field : Class_File_Field :=
-                    (Environment        => CLASS,
-                     Access_Flags       => Access_Flags,
-                     Name_Ref           => Utf_8_Constant_Pool_Entry (Name),
-                     Descriptor_Ref     =>
-                       Utf_8_Constant_Pool_Entry (Descriptor),
-                     others             => <>);
+                    (Environment    => CLASS,
+                     Access_Flags   => Access_Flags,
+                     Name_Ref       => Utf_8_Constant_Pool_Entry (Name),
+                     Descriptor_Ref => Utf_8_Constant_Pool_Entry (Descriptor),
+                     others         => <>);
                begin
                   Read_Attribute_Vector (Stream, Field.Attributes, Pool);
                   Item.Append (Field);
@@ -41,12 +40,11 @@ begin
             when IS_INTERFACE =>
                declare
                   Field : Class_File_Field :=
-                    (Environment         => IS_INTERFACE,
-                     Access_Flags        => Access_Flags,
-                     Name_Ref            => Utf_8_Constant_Pool_Entry (Name),
-                     Descriptor_Ref      =>
-                       Utf_8_Constant_Pool_Entry (Descriptor),
-                     others              => <>);
+                    (Environment    => IS_INTERFACE,
+                     Access_Flags   => Access_Flags,
+                     Name_Ref       => Utf_8_Constant_Pool_Entry (Name),
+                     Descriptor_Ref => Utf_8_Constant_Pool_Entry (Descriptor),
+                     others         => <>);
                begin
                   Read_Attribute_Vector (Stream, Field.Attributes, Pool);
                   Item.Append (Field);

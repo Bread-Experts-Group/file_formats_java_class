@@ -73,6 +73,7 @@ is
                  (Index,
                   Constant_Pool_Entry'
                     (STRING,
+
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element (Incomplete.String_Ref)))));
@@ -82,6 +83,7 @@ is
                  (Index,
                   Constant_Pool_Entry'
                     (CLASS,
+
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element (Incomplete.Qualified_Name_Ref)))));
@@ -91,9 +93,11 @@ is
                  (Index,
                   Constant_Pool_Entry'
                     (NAME_AND_TYPE,
+
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element (Incomplete.Name_Ref))),
+
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element (Incomplete.Descriptor_Ref)))));
@@ -108,9 +112,10 @@ is
                   Class_Ref         : constant Class_Constant_Pool_Entry :=
                     Class_Constant_Pool_Entry
                       (Item.Element (Incomplete.Class_Ref));
-                  Name_And_Type_Ref : constant Name_And_Type_Constant_Pool_Entry :=
-                    Name_And_Type_Constant_Pool_Entry
-                      (Item.Element (Incomplete.Name_And_Type_Ref));
+                  Name_And_Type_Ref :
+                    constant Name_And_Type_Constant_Pool_Entry :=
+                      Name_And_Type_Constant_Pool_Entry
+                        (Item.Element (Incomplete.Name_And_Type_Ref));
                begin
                   case Incomplete.Tag is
                      when FIELD_REFERENCE =>
@@ -119,6 +124,7 @@ is
                            Constant_Pool_Entry'
                              (FIELD_REFERENCE,
                               new Class_Constant_Pool_Entry'(Class_Ref),
+
                                 new Name_And_Type_Constant_Pool_Entry'
                                   (Name_And_Type_Ref)));
 
@@ -128,6 +134,7 @@ is
                            Constant_Pool_Entry'
                              (METHOD_REFERENCE,
                               new Class_Constant_Pool_Entry'(Class_Ref),
+
                                 new Name_And_Type_Constant_Pool_Entry'
                                   (Name_And_Type_Ref)));
 
@@ -137,6 +144,7 @@ is
                            Constant_Pool_Entry'
                              (INTERFACE_METHOD_REFERENCE,
                               new Class_Constant_Pool_Entry'(Class_Ref),
+
                                 new Name_And_Type_Constant_Pool_Entry'
                                   (Name_And_Type_Ref)));
 
@@ -164,6 +172,7 @@ is
                  (Index,
                   Constant_Pool_Entry'
                     (METHOD_TYPE,
+
                        new Utf_8_Constant_Pool_Entry'
                          (Utf_8_Constant_Pool_Entry
                             (Item.Element
@@ -182,12 +191,19 @@ is
                      Constant_Pool_Entry'
                        (INVOKE_DYNAMIC,
                         Incomplete.Bootstrap_Method_Index,
+
                           new Name_And_Type_Constant_Pool_Entry'
                             (Method_Name_And_Type)));
                end;
 
             when others =>
-               raise Possible_Misalignment with "A complete entry of " & Incomplete'Image & " at index" & Index'Image & " was added to the incomplete pool";
+               raise Possible_Misalignment
+                 with
+                   "A complete entry of "
+                   & Incomplete'Image
+                   & " at index"
+                   & Index'Image
+                   & " was added to the incomplete pool";
          end case;
       end;
    end Handle_Incomplete_Entry;
@@ -305,6 +321,7 @@ begin
                               Constant_Pool_Entry'
                                 (FIELD_REFERENCE,
                                  new Class_Constant_Pool_Entry'(Class_Ref),
+
                                    new Name_And_Type_Constant_Pool_Entry'
                                      (Name_And_Type_Ref)));
 
@@ -314,6 +331,7 @@ begin
                               Constant_Pool_Entry'
                                 (METHOD_REFERENCE,
                                  new Class_Constant_Pool_Entry'(Class_Ref),
+
                                    new Name_And_Type_Constant_Pool_Entry'
                                      (Name_And_Type_Ref)));
 
@@ -323,6 +341,7 @@ begin
                               Constant_Pool_Entry'
                                 (INTERFACE_METHOD_REFERENCE,
                                  new Class_Constant_Pool_Entry'(Class_Ref),
+
                                    new Name_And_Type_Constant_Pool_Entry'
                                      (Name_And_Type_Ref)));
 
@@ -464,6 +483,7 @@ begin
                         Constant_Pool_Entry'
                           (INVOKE_DYNAMIC,
                            Bootstrap_Method_Index,
+
                              new Name_And_Type_Constant_Pool_Entry'
                                (Method_Name_And_Type)));
                   end;
@@ -484,7 +504,7 @@ begin
 
    for Incomplete_Entry_Element in Incomplete_Map.Iterate loop
       Handle_Incomplete_Entry
-         (Incomplete_Pool_Maps.Key (Incomplete_Entry_Element));
+        (Incomplete_Pool_Maps.Key (Incomplete_Entry_Element));
    end loop;
    Incomplete_Map.Clear;
 

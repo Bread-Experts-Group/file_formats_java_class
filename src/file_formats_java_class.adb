@@ -166,9 +166,11 @@ package body File_Formats_Java_Class is
          Major_Version,
          Constant_Pool,
          Access_Flags,
+
            new Class_Constant_Pool_Entry'
              (Class_Constant_Pool_Entry
                 (Constant_Pool.Element (This_Class_Idx))),
+
            (if Super_Class_Idx > 0
             then
               new Class_Constant_Pool_Entry'

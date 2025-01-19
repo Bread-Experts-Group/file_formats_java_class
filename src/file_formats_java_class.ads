@@ -9,8 +9,8 @@ with Octet_Memory_Stream;
 package File_Formats_Java_Class is
 
    Possible_Misalignment : exception;
-   Unsupported_Version   : exception;
-   Impossible_Branch     : exception;
+   Unsupported_Version : exception;
+   Impossible_Branch : exception;
 
    package u8 renames Byteflippers.Endians_Unsigned_64;
    package u4 renames Byteflippers.Endians_Unsigned_32;
@@ -502,10 +502,11 @@ package File_Formats_Java_Class is
      Ada.Containers.Vectors (Positive, CFA_LineNumberTable_Line_Entry);
 
    package CFA_LocalVariableTable_Variable_Vectors is new
-     Ada.Containers.Vectors (Positive, CFA_LocalVariableTable_Variable_Entry);
+     Ada.Containers.Indefinite_Vectors
+      (Positive, CFA_LocalVariableTable_Variable_Entry);
 
    package CFA_LocalVariableTypeTable_Variable_Vectors is new
-     Ada.Containers.Vectors
+     Ada.Containers.Indefinite_Vectors
        (Positive,
         CFA_LocalVariableTypeTable_Variable_Entry);
 
@@ -519,7 +520,9 @@ package File_Formats_Java_Class is
         CFA_Annotation_Vectors."=");
 
    package CFA_BootstrapMethods_Method_Vectors is new
-     Ada.Containers.Indefinite_Vectors (Positive, CFA_BootstrapMethods_Method_Entry);
+     Ada.Containers.Indefinite_Vectors
+       (Positive,
+        CFA_BootstrapMethods_Method_Entry);
 
    package Class_Vectors is new
      Ada.Containers.Indefinite_Vectors (Positive, Class_Constant_Pool_Entry);
@@ -660,7 +663,7 @@ package File_Formats_Java_Class is
    type Class_File_Field (Environment : Class_File_Environment) is record
       Name_Ref, Descriptor_Ref : Utf_8_Constant_Pool_Entry;
       Attributes               : Attribute_Vectors.Vector;
-      Access_Flags : Class_File_Field_Access_Flags;
+      Access_Flags             : Class_File_Field_Access_Flags;
    end record;
 
    package Field_Vectors is new
