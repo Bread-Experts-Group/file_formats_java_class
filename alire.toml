@@ -89,6 +89,8 @@ All pertinent types and subprograms are available within the package
 as shown below.
 ```ada
 with Ada.Text_IO;
+with Ada.Streams.Stream_IO;
+use  Ada.Streams.Stream_IO;
 
 with File_Formats_Java_Class;
 use  File_Formats_Java_Class;
